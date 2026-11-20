@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário Escolar Inteligente (Prof. IA)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --secondary: #7C3AED;
+            --bg-start: #1E1B4B;
+            --bg-end: #312E81;
+            --surface: rgba(255, 255, 255, 0.1);
+            --surface-hover: rgba(255, 255, 255, 0.15);
+            --text: #F3F4F6;
+            --border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .glass-panel {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .hint {
+            font-size: 0.8rem;
+            font-weight: 300;
+            opacity: 0.8;
+            margin-top: -0.3rem;
+        }
+
+        input[type="text"], input[type="password"], input[type="file"], textarea, button {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s;
+            padding: 1rem;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        
+        td[contenteditable="true"] {
+            cursor: text;
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.2s;
+            border: 1px dashed transparent;
+        }
+        
+        td[contenteditable="true"]:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        td[contenteditable="true"]:focus {
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+            border: 1px solid var(--primary);
+        }
+        
+        .success-msg {
+            color: #10B981;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .loader {
+            display: none;
+            margin-left: 10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #ai-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--border);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Diário Escolar Inteligente</h1>
+
+    <div class="glass-panel">
+        <h2>1. Importar Dados</h2>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>A) Tabela de Horários (Imagem ou Planilha)</label>
+                <span class="hint">Aceita imagem/print (.png, .jpg) para a IA ler as datas, ou arquivo .csv/.xlsx pronto.</span>
+                <input type="file" id="base-upload" accept=".csv, .xlsx, .xls, .png, .jpg, .jpeg">
+                <span id="base-status" class="hint">Aguardando arquivo...</span>
+            </div>
+            
+            <div class="control-group">
+                <label>B) Banco de Conteúdos (Bernoulli)</label>
+                <span class="hint">O arquivo Excel do Bernoulli</span>
+                <input type="file" id="content-upload" accept=".xlsx, .xls">
+                <span id="content-status" class="hint">Aguardando arquivo...</span>
+            </div>
+        </div>
+
+        <h2>2. Configurações Pedagógicas</h2>
+        
+        <div class="controls" style="margin-bottom: 0;">
+            <div class="control-group">
+                <label>Filtro de Capítulos</label>
+                <span class="hint">Quais capítulos você deu nessa etapa? Ex: A1, A2, B1</span>
+                <input type="text" id="chapter-filter" placeholder="Ex: A1, A2, B1">
+            </div>
+        </div>
+
+        <label class="checkbox-group" style="margin-top: 1rem;">
+            <input type="checkbox" id="ai-mode" checked>
+            <span style="font-size: 0.95rem;">✨ <b>Ativar Inteligência Artificial (Leitor de Imagens e Gerador de Aulas)</b></span>
+        </label>
+
+        <div id="ai-settings">
+            <div class="control-group">
+                <label>Chave de API (Google AI Studio)</label>
+                <span class="hint"><a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #a7f3d0;">Clique aqui para gerar uma chave grátis do Google</a>. Cole-a abaixo:</span>
+                <input type="password" id="api-key" value="" placeholder="Cole a sua chave (API Key) gerada no Google AI Studio aqui">
+            </div>
+
+            <div class="control-group">
+                <label>Instruções para a IA (Prompt do Professor)</label>
+                <span class="hint">Descreva como você quer que a IA divida as aulas.</span>
+                <textarea id="ai-prompt" placeholder="Ex: Atue como professor de ensino médio utilizando metodologia investigativa. Inclua Avaliações P1, P2 e P3."></textarea>
+            </div>
+        </div>
+
+        <div class="controls" style="margin-top: 2rem; justify-content: center;">
+            <button id="merge-btn" style="display: flex; align-items: center; justify-content: center; width: 100%; max-width: 400px; font-size: 1.1rem;" disabled>
+                <span id="btn-text">Mesclar e Gerar Diário!</span>
+                <div id="loader" class="loader"></div>
+            </button>
+        </div>
+        <p id="success-msg" class="success-msg" style="text-align: center;">✅ Concluído! Extração de imagem e planejamento pedagógico realizados com sucesso!</p>
+        <p id="error-msg" style="color: #F87171; font-weight: 600; text-align: center; display: none;"></p>
+    </div>
+
+    <div class="glass-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>3. Edição Manual e Resultado Final</h2>
+            <button id="export-btn" style="background: #10B981; width: auto;" disabled>📥 Baixar Excel Pronto</button>
+        </div>
+        <p class="hint" style="margin-bottom: 1rem;">Dica: Clique em qualquer célula da tabela abaixo para editar o texto livremente.</p>
+        
+        <div style="overflow-x: auto;">
+            <table id="diary-table">
+                <thead id="diary-head">
+                    <!-- Cabeçalho dinâmico -->
+                </thead>
+                <tbody id="diary-body">
+                    <!-- Linhas dinâmicas -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let baseData = [];
+        let baseHeaders = [];
+        let contentData = [];
+        let baseImageBase64 = null;
+        let baseImageMimeType = null;
+        
+        const baseUpload = document.getElementById('base-upload');
+        const contentUpload = document.getElementById('content-upload');
+        const chapterFilter = document.getElementById('chapter-filter');
+        const aiModeCheckbox = document.getElementById('ai-mode');
+        const aiSettings = document.getElementById('ai-settings');
+        const apiKeyInput = document.getElementById('api-key');
+        const aiPromptInput = document.getElementById('ai-prompt');
+        const mergeBtn = document.getElementById('merge-btn');
+        const btnText = document.getElementById('btn-text');
+        const exportBtn = document.getElementById('export-btn');
+        const loader = document.getElementById('loader');
+        const successMsg = document.getElementById('success-msg');
+        const errorMsg = document.getElementById('error-msg');
+
+        aiModeCheckbox.addEventListener('change', (e) => {
+            aiSettings.style.display = e.target.checked ? 'flex' : 'none';
+        });
+
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Ler Planilha Base (Pode ser Arquivo ou Imagem)
+        baseUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            baseImageBase64 = null;
+            baseData = [];
+            baseHeaders = [];
+
+            if (file.type.startsWith('image/')) {
+                // É UMA IMAGEM! Guardar em base64 para processar depois com a IA
+                document.getElementById('base-status').textContent = `Imagem carregada! Será lida pela IA ao mesclar.`;
+                const fullBase64 = await convertFileToBase64(file);
+                baseImageBase64 = fullBase64.split(',')[1];
+                baseImageMimeType = file.type;
+                checkReady();
+            } else {
+                // É UM ARQUIVO DE EXCEL/CSV
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array', raw: true});
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: ''});
+                    if(json.length > 0) {
+                        baseHeaders = json[0];
+                        baseData = json.slice(1).filter(row => row.some(cell => cell !== '')); 
+                        document.getElementById('base-status').textContent = `Carregada: ${baseData.length} vagas de aulas.`;
+                        checkReady();
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        // Ler Banco de Conteúdos
+        contentUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                
+                contentData = XLSX.utils.sheet_to_json(worksheet, {defval: ''});
+                if(contentData.length > 0) {
+                    document.getElementById('content-status').textContent = `Carregado: Banco de conteúdos.`;
+                    checkReady();
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function checkReady() {
+            if ((baseData.length > 0 || baseImageBase64) && contentData.length > 0) {
+                mergeBtn.disabled = false;
+            }
+        }
+
+        // Função de IA: LER IMAGEM E EXTRAIR TABELA
+        async function callGeminiVisionAPI(apiKey, base64Image, mimeType) {
+            // Usamos o gemini-2.5-flash compatível com chaves de 2026
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            
+            const prompt = `
+                Extraia a tabela de horários de aula presente nesta imagem.
+                A tabela deve conter as seguintes colunas obrigatórias, nesta ordem: "Aula", "Data", "Início", "Término", "Conteúdo previsto".
+                Se alguma coluna não existir, crie-a com células vazias.
+                Retorne EXCLUSIVAMENTE um objeto JSON no formato de array bidimensional, onde o primeiro elemento é o array de cabeçalhos e os elementos seguintes são as linhas da tabela.
+                Exemplo: [["Aula", "Data", "Início", "Término", "Conteúdo previsto"], ["1", "01/01", "07:00", "07:50", ""]]
+            `;
+
+            const requestBody = {
+                contents: [{
+                    parts: [
+                        { text: prompt },
+                        { inline_data: { mime_type: mimeType, data: base64Image } }
+                    ]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            };
+            
+            const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
+            
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || "Erro no processamento visual da imagem.");
+            }
+            
+            const data = await response.json();
+            try {
+                return JSON.parse(data.candidates[0].content.parts[0].text);
+            } catch(e) {
+                throw new Error("A IA não conseguiu retornar um formato de tabela válido da imagem.");
+            }
+        }
+
+        // Função de IA: GERADOR PEDAGÓGICO
+        async function callGeminiTextAPI(apiKey, prompt, topics, totalClasses) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            
+            const systemContext = `
+                Você atua como um professor de física montando seu diário de classe.
+                Sua tarefa é expandir uma lista de TÓPICOS em um planejamento diário de exatamente ${totalClasses} AULAS.
+                Os tópicos que você deve abordar nesta etapa são: ${topics.join(" | ")}.
+                
+                INSTRUÇÕES DO PROFESSOR:
+                ${prompt || 'Aplique metodologias investigativas, aulas práticas e demonstrativas. Distribua três provas (P1, P2 e P3) organicamente ao longo das aulas com dias para correção.'}
+                
+                Retorne ÚNICA E EXCLUSIVAMENTE um array JSON contendo exatamente ${totalClasses} strings, cada uma sendo o texto que vai preencher a linha do diário daquela aula.
+                O nome do Tópico deve vir no começo da frase. Exemplo: ["Apresentação da disciplina", "Frente A - Cap 1; Investigação Inicial", "Avaliação P1", ...]
+            `;
+
+            const requestBody = {
+                contents: [{ parts: [{ text: systemContext }] }],
+                generationConfig: { responseMimeType: "application/json" }
+            };
+            
+            const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
+            
+            if (!response.ok) throw new Error("Erro na geração pedagógica.");
+            
+            const data = await response.json();
+            return JSON.parse(data.candidates[0].content.parts[0].text);
+        }
+
+        // Simulador de Fallback (Caso falhe)
+        function generateFallbackPlan(topics, totalClasses) {
+            if (topics.length === 0) return Array(totalClasses).fill('');
+            let plan = Array(totalClasses).fill('');
+            const p1Idx = Math.floor(totalClasses * 0.3) - 1;
+            const p2Idx = Math.floor(totalClasses * 0.6) - 1;
+            const p3Idx = totalClasses - 3;
+            
+            if(totalClasses > 15) {
+                plan[p1Idx] = "Avaliação P1"; plan[p1Idx + 1] = "Correção da Avaliação P1";
+                plan[p2Idx] = "Avaliação P2"; plan[p2Idx + 1] = "Correção da Avaliação P2";
+                plan[p3Idx] = "Avaliação P3"; plan[p3Idx + 1] = "Correção da Avaliação P3";
+            }
+
+            const templates = [
+                "{topico}; Ensino por Investigação: Proposição de problema",
+                "{topico}; Fundamentação Teórica e Aula Expositiva",
+                "{topico}; Atividade Prática/Demonstrativa",
+                "{topico}; Lista de exercícios",
+                "{topico}; Revisão conceitual"
+            ];
+
+            let emptySlots = [];
+            for(let i=0; i<totalClasses; i++) if(plan[i] === '') emptySlots.push(i);
+
+            let classesPerTopic = Math.floor(emptySlots.length / topics.length);
+            let slotIndex = 0;
+            for(let t=0; t<topics.length; t++) {
+                let numClasses = (t === topics.length - 1) ? (emptySlots.length - slotIndex) : classesPerTopic;
+                for(let c=0; c<numClasses; c++) {
+                    plan[emptySlots[slotIndex]] = templates[c % templates.length].replace(/{topico}/g, topics[t]);
+                    slotIndex++;
+                }
+            }
+            return plan;
+        }
+
+        // AÇÃO PRINCIPAL: O BOTÃO VERDE
+        mergeBtn.addEventListener('click', async () => {
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            const apiKey = apiKeyInput.value.trim();
+
+            if (aiModeCheckbox.checked && !apiKey) {
+                errorMsg.textContent = "Erro: Para o modo IA ler imagens ou gerar aulas, é necessária a Chave do Google AI Studio.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            mergeBtn.disabled = true;
+            loader.style.display = 'block';
+
+            try {
+                // FASE 1: EXTRAIR TABELA DA IMAGEM SE FOR UPLOAD DE IMAGEM
+                if (baseImageBase64) {
+                    btnText.textContent = "IA Lendo Imagem (OCR)...";
+                    const tableData = await callGeminiVisionAPI(apiKey, baseImageBase64, baseImageMimeType);
+                    baseHeaders = tableData[0];
+                    baseData = tableData.slice(1);
+                }
+
+                if (baseData.length === 0) throw new Error("A planilha base (ou imagem) não resultou em nenhuma aula encontrada.");
+
+                // FASE 2: TRATAR O BANCO DE CONTEÚDOS
+                let filterString = chapterFilter.value.trim().toUpperCase();
+                let filters = filterString ? filterString.split(',').map(s => s.trim()).filter(s => s) : [];
+
+                const excelCols = Object.keys(contentData[0] || {});
+                const colFrente = excelCols.find(c => c.toLowerCase().includes('frente'));
+                const colCapitulo = excelCols.find(c => c.toLowerCase().includes('capítulo') || c.toLowerCase().includes('capitulo'));
+                const colAssunto = excelCols.find(c => c.toLowerCase().includes('assunto') || c.toLowerCase().includes('conteúdo') || c.toLowerCase().includes('tópico'));
+
+                const extractedTopics = [];
+                for(let row of contentData) {
+                    let frente = colFrente ? String(row[colFrente]).trim() : '';
+                    let capitulo = colCapitulo ? String(row[colCapitulo]).trim() : '';
+                    let assunto = colAssunto ? String(row[colAssunto]).trim() : '';
+                    
+                    if(!frente && !capitulo && !assunto) continue;
+
+                    let chapterCode = frente + capitulo;
+                    if(filters.length > 0 && !filters.some(f => chapterCode.includes(f) || f.includes(chapterCode))) continue;
+
+                    let textoFinal = '';
+                    if(frente) textoFinal += `Frente ${frente}`;
+                    if(capitulo) textoFinal += (textoFinal ? ` - ` : '') + `Capítulo ${capitulo}`;
+                    if(assunto) textoFinal += (textoFinal ? ` - ` : '') + assunto;
+                    extractedTopics.push(textoFinal);
+                }
+
+                if(extractedTopics.length === 0) throw new Error('Nenhum conteúdo encontrado com esses filtros!');
+
+                // FASE 3: GERAR PLANEJAMENTO PEDAGÓGICO
+                let finalContents = [];
+                if (aiModeCheckbox.checked) {
+                    btnText.textContent = "Gerando Planejamento Pedagógico...";
+                    try {
+                        finalContents = await callGeminiTextAPI(apiKey, aiPromptInput.value, extractedTopics, baseData.length);
+                    } catch(error) {
+                        console.error(error);
+                        finalContents = generateFallbackPlan(extractedTopics, baseData.length);
+                        errorMsg.textContent = "Aviso: Falha na criação das aulas via Nuvem. O Gerador Local foi ativado como fallback.";
+                        errorMsg.style.display = 'block';
+                    }
+                } else {
+                    finalContents = extractedTopics;
+                }
+
+                // FASE 4: RENDERIZAR TABELA
+                renderTable(finalContents);
+
+            } catch (error) {
+                errorMsg.textContent = "Erro crítico: " + error.message;
+                errorMsg.style.display = 'block';
+            }
+
+            loader.style.display = 'none';
+            mergeBtn.disabled = false;
+            btnText.textContent = "Mesclar e Gerar Diário!";
+        });
+
+        function renderTable(finalContents) {
+            let targetColIndex = baseHeaders.findIndex(h => String(h).toLowerCase().includes('conteúdo'));
+            if (targetColIndex === -1) {
+                targetColIndex = baseHeaders.length;
+                if(!baseHeaders.includes('Conteúdo previsto')) baseHeaders.push('Conteúdo previsto');
+            }
+
+            const thead = document.getElementById('diary-head');
+            thead.innerHTML = '<tr>' + baseHeaders.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+            const tbody = document.getElementById('diary-body');
+            tbody.innerHTML = '';
+
+            let contentIndex = 0;
+            
+            baseData.forEach((row, rowIndex) => {
+                while(row.length < baseHeaders.length) row.push('');
+
+                if (contentIndex < finalContents.length) {
+                    row[targetColIndex] = finalContents[contentIndex];
+                    contentIndex++;
+                } else {
+                    row[targetColIndex] = ''; 
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = row.map(cell => `<td contenteditable="true">${cell}</td>`).join('');
+                tbody.appendChild(tr);
+            });
+
+            successMsg.style.display = 'block';
+            exportBtn.disabled = false;
+        }
+
+        exportBtn.addEventListener('click', () => {
+            const table = document.getElementById('diary-table');
+            const clonedTable = table.cloneNode(true);
+            const cells = clonedTable.querySelectorAll('td');
+            cells.forEach(c => c.removeAttribute('contenteditable'));
+
+            const wb = XLSX.utils.table_to_book(clonedTable, {sheet: "Diário Final"});
+            XLSX.writeFile(wb, 'Diario_Final_Automacao_Visual.xlsx');
+        });
+    </script>
+</body>
+</html>

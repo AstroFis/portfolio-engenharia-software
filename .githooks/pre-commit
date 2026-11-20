@@ -1,0 +1,10 @@
+#!/bin/sh
+# Git Pre-Commit Security Firewall
+echo "🔒 Executando Firewall Pre-Commit de Segurança & LGPD..."
+node scripts/auditoria_seguranca.js --staged
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+  echo "❌ Commit cancelado automaticamente pelo Firewall de Segurança."
+  exit 1
+fi
+exit 0

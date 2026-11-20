@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transmissão ao Vivo - TOTVS RM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white m-0 p-0 flex flex-col h-screen overflow-hidden">
+  <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+      <span class="font-bold text-slate-200">Visão em Tempo Real do TOTVS RM</span>
+      <span class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded text-[10px]">Guia Dedicada</span>
+    </div>
+    <div class="text-slate-400 text-[11px] flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Atualização Contínua (~1s)
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center p-2 bg-black">
+    <img id="liveImg" src="/api/screenshot" alt="Transmissão ao vivo do TOTVS" class="max-w-full max-h-full object-contain rounded shadow-2xl">
+  </main>
+
+  <script>
+    const img = document.getElementById('liveImg');
+    async function loop() {
+      try {
+        await new Promise((resolve) => {
+          const next = new Image();
+          next.onload = () => { img.src = next.src; resolve(); };
+          next.onerror = () => { resolve(); };
+          next.src = '/api/screenshot?t=' + Date.now();
+        });
+      } catch (e) {}
+      setTimeout(loop, 350);
+    }
+    loop();
+  </script>
+</body>
+</html>

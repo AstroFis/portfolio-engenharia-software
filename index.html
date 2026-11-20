@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucas Drumond Cabral — Portfólio de Engenharia de Software, Currículo de TI & Gestor de Certificados</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #ffffff !important; color: #111827 !important; }
+      .print-only-cv { display: block !important; }
+      .print-card {
+        background: #ffffff !important;
+        color: #111827 !important;
+        border: 1px solid #d1d5db !important;
+        box-shadow: none !important;
+      }
+      .print-text-dark { color: #111827 !important; }
+      .print-text-muted { color: #4b5563 !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-slate-950">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 font-mono font-bold text-lg text-white">
+          LD
+        </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight text-white flex items-center gap-2">
+            Lucas Drumond Cabral
+            <span class="text-xs font-mono uppercase px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">CV & Portfolio Hub</span>
+          </h1>
+          <p class="text-xs text-slate-400">Full-Stack • RPA & Automação • IA Aplicada • Computação Científica & Física</p>
+        </div>
+      </div>
+
+      <nav class="flex flex-wrap items-center gap-2" id="nav-tabs">
+        <button onclick="switchTab('portfolio')" id="tab-btn-portfolio" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-cyan-500 text-slate-950 font-semibold shadow-md shadow-cyan-500/20">
+          <i class="ph-bold ph-code"></i> Portfólio (7 Sistemas)
+        </button>
+        <button onclick="switchTab('curriculo')" id="tab-btn-curriculo" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+          <i class="ph-bold ph-file-text"></i> Currículo de TI
+        </button>
+        <button onclick="switchTab('certificados')" id="tab-btn-certificados" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+          <i class="ph-bold ph-certificate"></i> Certificados (61)
+        </button>
+        <button onclick="switchTab('auditoria')" id="tab-btn-auditoria" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-slate-900 text-emerald-300 hover:bg-slate-800 border border-emerald-500/30">
+          <i class="ph-bold ph-shield-check"></i> DevSecOps & LGPD
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO STATS BAR -->
+  <section class="border-b border-slate-800/80 bg-gradient-to-b from-slate-900/70 to-slate-950 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="text-xs font-mono uppercase text-cyan-400">Experiência em TI (UFOP)</div>
+          <div class="text-2xl font-extrabold text-white mt-1">2.172h</div>
+          <div class="text-xs text-slate-400 mt-0.5">Diretoria de TI (2019–2022)</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="text-xs font-mono uppercase text-blue-400">Sistemas no Portfólio</div>
+          <div class="text-2xl font-extrabold text-white mt-1">7 Projetos</div>
+          <div class="text-xs text-slate-400 mt-0.5">SaaS, ERP, RPA Desktop & IA</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="text-xs font-mono uppercase text-emerald-400">Hardware & Instrumentação</div>
+          <div class="text-2xl font-extrabold text-white mt-1">1.440h</div>
+          <div class="text-xs text-slate-400 mt-0.5">P&D E-Lixo & Eletrônica UFOP</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="text-xs font-mono uppercase text-purple-400">Hackathons & Inovação</div>
+          <div class="text-2xl font-extrabold text-white mt-1">NASA Apps</div>
+          <div class="text-xs text-slate-400 mt-0.5">Avaliador Local & Tutor (AEB)</div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 col-span-2 md:col-span-1">
+          <div class="text-xs font-mono uppercase text-amber-400">Carga Horária Total</div>
+          <div class="text-2xl font-extrabold text-white mt-1">+5.394h</div>
+          <div class="text-xs text-slate-400 mt-0.5">61 Certificados Validados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ==================== TAB 1: PORTFOLIO DE PROJETOS ==================== -->
+    <section id="tab-portfolio" class="space-y-8 no-print">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Repositório Oficial & Código-Fonte Sanitizado (./projetos)</span>
+          <h2 class="text-3xl font-extrabold text-white mt-1">Portfólio de Engenharia de Software, RPA & IA</h2>
+          <p class="text-slate-400 text-sm mt-1 max-w-3xl">
+            Projetos reais construídos para resolver gargalos operacionais críticos em instituições de ensino e empresas de engenharia, combinando automação de sistemas legados, Inteligência Artificial generativa/multimodal e arquiteturas web modernas em tempo real.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterPortfolio('ALL')" class="pf-filter px-3 py-1.5 rounded-lg text-xs font-mono bg-cyan-500 text-slate-950 font-semibold">Todos (7)</button>
+          <button onclick="filterPortfolio('RPA')" class="pf-filter px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-300 border border-slate-800 hover:border-cyan-500/50">RPA & Desktop</button>
+          <button onclick="filterPortfolio('SAAS')" class="pf-filter px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-300 border border-slate-800 hover:border-cyan-500/50">Full-Stack SaaS & ERP</button>
+          <button onclick="filterPortfolio('AI')" class="pf-filter px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900 text-slate-300 border border-slate-800 hover:border-cyan-500/50">IA & Visão Computacional</button>
+        </div>
+      </div>
+
+      <div id="portfolio-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+    </section>
+
+    <!-- ==================== TAB 2: CURRICULO DE TI ==================== -->
+    <section id="tab-curriculo" class="hidden print-only-cv space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-4 rounded-xl no-print">
+        <div>
+          <h2 class="text-lg font-bold text-white">Currículo Executivo — Tecnologia da Informação, Engenharia de Software & IA</h2>
+          <p class="text-xs text-slate-400">Otimizado para recrutadores técnicos (ATS-Friendly) e pronto para exportação/impressão em folha A4.</p>
+        </div>
+        <button onclick="window.print()" class="px-4 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20">
+          <i class="ph-bold ph-printer"></i> Imprimir / Salvar PDF (A4)
+        </button>
+      </div>
+
+      <!-- RESUME SHEET -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 md:p-10 space-y-6 print-card">
+        <div class="border-b border-slate-800 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white print-text-dark">LUCAS DRUMOND DE MAGALHÃES CABRAL</h1>
+            <p class="text-cyan-400 font-semibold mt-1 print-text-dark">
+              Desenvolvedor Full-Stack • Especialista em Automação (RPA) & IA Aplicada • Físico Computacional (UFOP)
+            </p>
+            <p class="text-xs text-slate-400 mt-1 print-text-muted">
+              Minas Gerais, Brasil (Itabira / Ouro Preto / Belo Horizonte) • 📱 (31) 98782-0484 • ✉️ 27.drummond@gmail.com • Graduado pela UFOP
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-mono no-print">
+            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-cyan-300 border border-slate-700">ITIL Foundation</span>
+            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-cyan-300 border border-slate-700">COBIT 4.1</span>
+            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-purple-300 border border-slate-700">NASA Space Apps Judge</span>
+          </div>
+        </div>
+
+        <!-- RESUMO -->
+        <div>
+          <h3 class="text-sm font-mono uppercase tracking-wider text-cyan-400 font-bold mb-2 print-text-dark">1. Resumo Profissional</h3>
+          <p class="text-sm text-slate-300 leading-relaxed print-text-dark">
+            Profissional de Tecnologia da Informação e Físico graduado pela <strong>Universidade Federal de Ouro Preto (UFOP)</strong>, com <strong>2.172 horas de experiência prática na Diretoria de Tecnologia da Informação (DTI/UFOP)</strong>, formação em governança e gerenciamento de serviços de TI (<strong>COBIT 4.1</strong> e <strong>ITIL</strong>) e <strong>1.440 horas de atuação prática em hardware, instrumentação eletrônica e reciclagem tecnológica (e-lixo)</strong>. Desenvolvedor de sistemas em produção utilizando <strong>React 18/19, Next.js 16, TypeScript, Node.js, Express, Puppeteer e Firebase</strong>, com forte especialização em <strong>Automação Robótica de Processos (RPA)</strong>, integração com <strong>Inteligência Artificial Generativa e Visão Computacional (Google Gemini API & Processamento Digital de Imagens)</strong> e modelagem matemática/física para engenharia aeroespacial (USP, AEB, UNIFEI Falcon-6 e Skyline Space).
+          </p>
+        </div>
+
+        <!-- STACK TECNOLOGICA -->
+        <div>
+          <h3 class="text-sm font-mono uppercase tracking-wider text-cyan-400 font-bold mb-3 print-text-dark">2. Competências Técnicas de TI & Engenharia</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+            <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 print-card">
+              <strong class="text-white print-text-dark">Full-Stack Web & Cloud:</strong>
+              <p class="text-slate-300 text-xs mt-1 print-text-muted">JavaScript (ES6+), TypeScript, React 18/19, Next.js 16 (App Router), Node.js, Express 5, Tailwind CSS, HTML5/CSS3, Vite, Firebase (Firestore Real-time, Batch Writes, Auth).</p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 print-card">
+              <strong class="text-white print-text-dark">Automação (RPA), Desktop & Sistemas Legados:</strong>
+              <p class="text-slate-300 text-xs mt-1 print-text-muted">Puppeteer, Chrome DevTools Protocol (CDP), MCP, Engenharia Reversa de DOM (ASP.NET WebForms / DevExpress / TOTVS RM), API Win32 (<code>user32.dll</code> C#/PowerShell), Compilação <code>.exe</code> (<code>caxa</code>).</p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 print-card">
+              <strong class="text-white print-text-dark">Inteligência Artificial, PDI & Ciência de Dados:</strong>
+              <p class="text-slate-300 text-xs mt-1 print-text-muted">Google Gemini API (Texto e Visão Multimodal OCR), Engenharia de Prompts Estruturados (JSON), Python (<code>pandas</code>), SheetJS (<code>xlsx</code>), <code>jsPDF</code>, Processamento Digital de Imagens (RAW/FITS, Stacking, Calibração de Ruído) e Telescópios Robóticos (ESA/IAC).</p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 print-card">
+              <strong class="text-white print-text-dark">Governança de TI, Hardware & Metodologias:</strong>
+              <p class="text-slate-300 text-xs mt-1 print-text-muted">ITIL (ITSM / Service Desk / Incidentes / SLAs), COBIT 4.1 (Governança e Auditoria de TI), Segurança Digital, Eletrônica e Manutenção de Hardware (1.440h), Robótica (PETE), Metodologias Ágeis, PBL e Design Thinking.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPERIENCIA PROFISSIONAL -->
+        <div>
+          <h3 class="text-sm font-mono uppercase tracking-wider text-cyan-400 font-bold mb-3 print-text-dark">3. Experiência em TI, Desenvolvimento de Software e P&D</h3>
+          <div class="space-y-4 text-sm">
+            <div class="border-l-2 border-cyan-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Desenvolvedor Full-Stack, Arquiteto de RPA & Soluções de IA (Portfólio Autoral & Consultoria)</h4>
+                <span class="text-xs font-mono text-cyan-400 print-text-muted">2024 – 2026</span>
+              </div>
+              <ul class="list-disc list-inside text-xs text-slate-300 mt-1.5 space-y-1 print-text-dark">
+                <li><strong>AutomatoForms ("Jarvizinha"):</strong> Desenvolveu copiloto RPA híbrido (Web + Desktop <code>.exe</code> Split-Screen 50/50 via Win32 API e CDP) em Node.js, Express e Puppeteer para automação de notas, faltas e planos de aula com IA (Google Gemini) no ERP TOTVS RM.</li>
+                <li><strong>Pequim Engenharia (ERP / FSM):</strong> Construiu sistema corporativo em React 18 + TypeScript para gestão de Ordens de Serviço, calculadora automática de orçamentos de climatização/PMOC, agenda móvel de técnicos em campo e Portal do Cliente sincronizado em tempo real.</li>
+                <li><strong>Simulador CNSD & PlataformaFísica (v1.0/v1.2):</strong> Desenvolveu plataformas SaaS em Next.js 16, React 19 e Firebase Firestore para aplicação de provas digitais com monitoramento anti-cola (<code>Page Visibility API</code>), geração de questões por IA, relatórios em PDF (<code>jsPDF</code>) e gestão de Olimpíadas Científicas.</li>
+                <li><strong>Diário Escolar Inteligente (<code>DIARIO</code>):</strong> Implementou aplicação web com OCR Multimodal (<code>Gemini Vision</code>) capaz de converter fotos de quadros de horários em cronogramas estruturados em Excel.</li>
+              </ul>
+            </div>
+
+            <div class="border-l-2 border-blue-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Consultor Técnico, Coordenador Externo e Instrutor de Processamento Digital de Imagens</h4>
+                <span class="text-xs font-mono text-blue-400 print-text-muted">Out 2022 – Presente</span>
+              </div>
+              <div class="text-xs text-slate-400 print-text-muted">Universidade Federal de Itajubá (UNIFEI — Campus Itabira) • Equipe Falcon-6 Rocket Design</div>
+              <ul class="list-disc list-inside text-xs text-slate-300 mt-1.5 space-y-1 print-text-dark">
+                <li>Atuação como <strong>Coordenador Externo (2022)</strong> e <strong>Consultor/Tutor Técnico (2023–2026)</strong> da equipe de competição tecnológica de engenharia de foguetes Falcon-6.</li>
+                <li>Ministrou <strong>4 edições da Oficina de Astrofotografia e Processamento Digital de Imagens</strong> (2023, 2024, 2026) e <strong>2 edições do Minicurso de Física de Foguetes</strong> (2023, 2025) para alunos de engenharia.</li>
+              </ul>
+            </div>
+
+            <div class="border-l-2 border-indigo-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Project Trainee — Rocket Design Technology (Estágio Internacional)</h4>
+                <span class="text-xs font-mono text-indigo-400 print-text-muted">Set 2026 – Out 2026</span>
+              </div>
+              <div class="text-xs text-slate-400 print-text-muted">Skyline Space (Coimbatore, Índia — Remoto / Vínculo UNIFEI • Credencial SYLPC/RDT5/PT36/2026)</div>
+              <p class="text-xs text-slate-300 mt-1 print-text-dark">Atuação internacional em tecnologia de projeto de foguetes, análise de sistemas aeroespaciais e colaboração técnica em inglês.</p>
+            </div>
+
+            <div class="border-l-2 border-purple-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Avaliador Local (Juiz Técnico) & Tutor Local (Mentor de Hackathon)</h4>
+                <span class="text-xs font-mono text-purple-400 print-text-muted">Out 2023</span>
+              </div>
+              <div class="text-xs text-slate-400 print-text-muted">NASA Space Apps Challenge • Agência Espacial Brasileira (AEB / MCTI)</div>
+              <p class="text-xs text-slate-300 mt-1 print-text-dark">Mentoria técnica de equipes em desenvolvimento ágil de software e consumo de dados abertos da NASA, além de avaliação oficial de protótipos e arquiteturas tecnológicas.</p>
+            </div>
+
+            <div class="border-l-2 border-emerald-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Bolsista de Tecnologia da Informação (2.172 Horas Certificadas)</h4>
+                <span class="text-xs font-mono text-emerald-400 print-text-muted">Nov 2019 – Fev 2022</span>
+              </div>
+              <div class="text-xs text-slate-400 print-text-muted">Diretoria de Tecnologia da Informação (DTI / NTI) — Universidade Federal de Ouro Preto (UFOP)</div>
+              <p class="text-xs text-slate-300 mt-1 print-text-dark">Mais de 2 anos de atuação direta (20h semanais) nas rotinas técnicas, administrativas e de suporte a sistemas institucionais da Diretoria de TI da UFOP.</p>
+            </div>
+
+            <div class="border-l-2 border-amber-500 pl-4">
+              <div class="flex flex-wrap justify-between items-baseline">
+                <h4 class="font-bold text-white print-text-dark">Bolsista de P&D em Hardware, Eletrônica e E-Lixo (1.440 Horas Certificadas)</h4>
+                <span class="text-xs font-mono text-amber-400 print-text-muted">Abr 2016 – Nov 2018</span>
+              </div>
+              <div class="text-xs text-slate-400 print-text-muted">Programa Pró-Ativa — Universidade Federal de Ouro Preto (UFOP)</div>
+              <p class="text-xs text-slate-300 mt-1 print-text-dark">Três ciclos anuais consecutivos (480h/ano) realizando engenharia reversa, triagem de componentes eletrônicos e desenvolvimento de instrumentação científica a partir de sucata eletrônica (e-lixo), além de 435h no Núcleo de Educação Inclusiva (2015–2016) e 50h na manutenção do Observatório da Escola de Minas (2019).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORMACAO & CERTIFICACOES -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div>
+            <h3 class="text-sm font-mono uppercase tracking-wider text-cyan-400 font-bold mb-2 print-text-dark">4. Formação Acadêmica & Extensão</h3>
+            <ul class="space-y-2 text-xs text-slate-300 print-text-dark">
+              <li>🎓 <strong>Licenciatura em Física</strong> — Universidade Federal de Ouro Preto (UFOP, 2022)</li>
+              <li>🚀 <strong>Fundamentos da Engenharia Aeroespacial (40h)</strong> — USP / EESC São Carlos (2026)</li>
+              <li>🔭 <strong>Aperfeiçoamento em Astronomia (239h)</strong> — USP / IAG (2024–2025)</li>
+              <li>🛰️ <strong>Propulsão Espacial e Física de Foguetes (84h)</strong> — Agência Espacial Brasileira (AEB, 2023–2025)</li>
+              <li>🌌 <strong>Cosmologia: Da Origem ao Fim do Universo (120h)</strong> — Observatório Nacional / MCTI (2015)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-mono uppercase tracking-wider text-cyan-400 font-bold mb-2 print-text-dark">5. Certificações TI, Dados & Premiações</h3>
+            <ul class="space-y-2 text-xs text-slate-300 print-text-dark">
+              <li>📜 <strong>Fundamentos de COBIT® 4.1 (16h) & ITIL (16h)</strong> — Fundação Bradesco (2020)</li>
+              <li>🤖 <strong>Introdução ao Mundo da Robótica</strong> — PETE Educacional (2024)</li>
+              <li>🔐 <strong>Liderando um STEAM Club Online & Segurança Digital</strong> — British Council / Órbita (2023)</li>
+              <li>🌍 <strong>Telescópios Robóticos & Dados Espaciais</strong> — Agência Espacial Europeia (ESA 2022, 2025) & IAC Canárias (2024, 32h)</li>
+              <li>🏆 <strong>Professor Premiado na 18ª OBMEP (2023)</strong> — IMPA / MCTI / MEC</li>
+              <li>📄 <strong>Autor de Artigo Completo no VII CIM (2024)</strong> — Inovação e Metodologias no Ensino Superior (UFOP/UFMG)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: EXPLORADOR DE CERTIFICADOS ==================== -->
+    <section id="tab-certificados" class="hidden space-y-6 no-print">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-cyan-400">Leitura Integral dos 61 Certificados Válidos</span>
+          <h2 class="text-2xl font-extrabold text-white mt-1">Catálogo Interativo de Certificados & Habilidades</h2>
+          <p class="text-xs text-slate-400 mt-1">Filtre por área tecnológica, pesquise por instituição ou palavra-chave e clique em <strong>Abrir PDF</strong> para visualizar o documento original.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div class="relative flex-1 sm:w-72">
+            <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-slate-400"></i>
+            <input id="cert-search" type="text" oninput="renderCertificates()" placeholder="Buscar curso, TI, USP, foguete, PDI..." class="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm text-white focus:outline-none focus:border-cyan-500" />
+          </div>
+          <select id="cert-category" onchange="renderCertificates()" class="px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-sm text-slate-200 focus:outline-none focus:border-cyan-500">
+            <option value="ALL">Todas as Categorias (61)</option>
+            <option value="TI_HARDWARE">💻 TI, Governança, Robótica, Hardware & Hackathons (12)</option>
+            <option value="PDI_DADOS">📸 Processamento de Imagem, Telescópios Robóticos & Dados (9)</option>
+            <option value="AEROESPACIAL">🚀 Engenharia Aeroespacial, Propulsão & Equipe Falcon-6 (14)</option>
+            <option value="ACADEMICO">🎓 Graduação em Física, Astrofísica & Instrumentação (20)</option>
+            <option value="METODOLOGIAS">📊 Metodologias Ágeis/PBL, Publicações & Premiações (6)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="cert-count" class="text-xs font-mono text-slate-400"></div>
+      <div id="cert-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- ==================== TAB 4: DEVSECOPS & LGPD ==================== -->
+    <section id="tab-auditoria" class="hidden space-y-6 no-print">
+      <div class="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-4">
+        <div class="flex items-center gap-3">
+          <i class="ph-fill ph-shield-check text-3xl text-emerald-400"></i>
+          <div>
+            <h2 class="text-xl font-bold text-white">Arquitetura de Segurança, DevSecOps & Conformidade LGPD</h2>
+            <p class="text-xs text-emerald-200/80">Este repositório implementa defesa em profundidade (Defense-in-Depth) alinhada aos frameworks COBIT 4.1, ITIL e à Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
+            <span class="text-xs font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">1. Firewall Pre-Commit & CI/CD Anti-Vazamento</span>
+            <ul class="space-y-2.5 text-xs text-slate-300 pt-2">
+              <li><strong class="text-white">Scanner Automático (<code>scripts/auditoria_seguranca.js</code>):</strong> Executado automaticamente via Git Hook (<code>.git/hooks/pre-commit</code>) e GitHub Actions antes de qualquer commit ou push.</li>
+              <li><strong class="text-white">Bloqueio de Credenciais & Chaves:</strong> Detecta e bloqueia automaticamente chaves Google/Firebase (<code>AIza...</code>), tokens OAuth (<code>AQ...</code>), arquivos <code>.env</code>, senhas e URLs de tenants corporativos privados.</li>
+              <li><strong class="text-white">Anonimização de Seeds:</strong> Todos os dados de demonstração em <code>projetos/</code> utilizam telefones, documentos e credenciais fictícias ou variáveis de ambiente (<code>.env.example</code>).</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 space-y-2">
+            <span class="text-xs font-mono uppercase px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">2. Proteção de Dados Pessoais (LGPD) em Certificados</span>
+            <ul class="space-y-2.5 text-xs text-slate-300 pt-2">
+              <li><strong class="text-white">Isolamento de Binários Sensíveis (<code>.gitignore</code>):</strong> Como certificados acadêmicos e diplomas contêm CPF, registro funcional e assinaturas físicas, os arquivos <code>.pdf</code> permanecem estritamente em armazenamento local ignorado pelo Git.</li>
+              <li><strong class="text-white">Verificação Pública por Metadados:</strong> O catálogo público expõe apenas título oficial, instituição emissora, carga horária, ementa e códigos/hashes públicos de validação institucional.</li>
+              <li><strong class="text-white">Acesso Sob Demanda:</strong> Recrutadores podem solicitar os PDFs originais ou validar diretamente nos portais da UFOP, USP, UNIFEI, AEB e Fundação Bradesco.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==================== DATA: PORTFOLIO PROJECTS ====================
+    const portfolioProjects = [
+      {
+        id: "automatoforms",
+        title: "AutomatoForms (\"Jarvizinha\") — Copiloto & RPA com IA para TOTVS RM",
+        category: ["RPA", "AI"],
+        badge: "RPA Desktop/Web + IA Generativa",
+        path: "./projetos/01-automatoforms-rpa-ia",
+        summary: "Sistema híbrido de Automação Robótica de Processos (RPA) e Copiloto Pedagógico com IA para o portal legado TOTVS RM Educacional (Corpore.Net), com interface Split-Screen 50/50 nativa no Windows e executável standalone (.exe).",
+        highlights: [
+          "Gerenciador de Janelas Lado a Lado (50/50 Split Desktop) via API Win32 P/Invoke (user32.dll em C#/PowerShell) + Chrome DevTools Protocol (CDP).",
+          "Engenharia reversa de grids DevExpress e UpdatePanels ASP.NET WebForms com injeção assíncrona resiliente de eventos DOM.",
+          "Planejamento pedagógico automatizado com Google Gemini + Matriz Curricular Bernoulli JSON e fallback determinístico local.",
+          "Regra de Ouro do Zero (proteção de alunos de 2ª chamada) e espelhamento automático entre disciplinas integradas.",
+          "Automação completa de frequência diária ('Raio Azul') e empacotamento standalone em AutomatoForms.exe via caxa."
+        ],
+        stack: ["Node.js", "Express 5", "Puppeteer", "CDP", "Google Gemini API", "Win32 API (C#)", "SheetJS (xlsx)", "Tailwind CSS", "caxa (.exe)"]
+      },
+      {
+        id: "pequim",
+        title: "Pequim Engenharia — Sistema Corporativo ERP / FSM & Portal do Cliente",
+        category: ["SAAS"],
+        badge: "ERP Corporativo & Field Service",
+        path: "./projetos/02-pequim-engenharia-erp",
+        summary: "Plataforma web corporativa e reativa desenvolvida para a Pequim Engenharia e Serviços Ltda (BH/MG), substituindo planilhas operacionais por 3 módulos integrados: Coordenação/Engenharia, Agenda Móvel do Técnico em Campo e Portal do Cliente.",
+        highlights: [
+          "Arquitetura tripartida sincronizada em tempo real entre abas via Context API + Storage Sync e sistema de notificações por perfil.",
+          "Calculadora automática de orçamento de climatização (Splits, Piso Teto, Cassete, tubulação de cobre, furos em viga e contratos PMOC).",
+          "Módulo móvel de campo com rotas GPS/Google Maps, checklist em 4 passos e separação entre Parecer Público e Notas Internas com cadeado.",
+          "Portal do Cliente com linha do tempo auditável (StatusLog), aprovação de orçamento em 1 clique, WhatsApp e gerador de Proposta A4/PDF.",
+          "Importador e exportador CSV 100% compatível com a planilha legada AGENDA - GESTÃO OPERACIONAL.xlsx."
+        ],
+        stack: ["React 18.3", "TypeScript 5.6", "Vite 6", "Tailwind CSS", "Lucide React", "Context API Real-time", "Print CSS A4"]
+      },
+      {
+        id: "simulador-cnsd",
+        title: "Simulador CNSD & Arena Olímpica — Plataforma SaaS Full-Stack",
+        category: ["SAAS"],
+        badge: "SaaS Educacional Cloud",
+        path: "./projetos/03-simulador-cnsd-saas",
+        summary: "Plataforma web full-stack multi-instituição (Colégio Nossa Senhora das Dores e Colégio Auge) para gestão de turmas, aplicação de simulados digitais e coordenação de delegações em Olimpíadas Científicas (OBA, OBMEP, Canguru, OLITEF).",
+        highlights: [
+          "Sincronização em tempo real via Firebase Firestore (onSnapshot) e importação massiva de alunos via CSV com gravação atômica (writeBatch).",
+          "Geração automática de credenciais de primeiro acesso em conformidade com a LGPD a partir da data de nascimento.",
+          "Forja de avaliações Dual-Mode (Turma Regular AVAL-XXXX vs. Treino Olímpico OLX-XXXX) com navegação em cascata ou paginada.",
+          "Correção híbrida (objetiva instantânea + painel docente para discursivas) e emissão de Relatórios Gerais e Boletins Individuais em PDF (jsPDF).",
+          "Gestão completa de medalhistas e geração automática do Quadro de Honra Acadêmica."
+        ],
+        stack: ["Next.js 16 (App Router)", "React 19", "TypeScript 5", "Firebase 12 (Firestore/Auth)", "Tailwind CSS 4", "jsPDF + AutoTable"]
+      },
+      {
+        id: "plataformafisica",
+        title: "PlataformaFísica (v1.0 & v1.2) — Simulados Adaptativos IA & Anti-Cola",
+        category: ["SAAS", "AI"],
+        badge: "Avaliação Adaptativa & Proctoring",
+        path: "./projetos/04-plataforma-fisica-ia",
+        summary: "Duas versões evolutivas de uma SPA serverless de estudo autônomo e avaliação de Física para as 3 séries do Ensino Médio (Matriz Bernoulli), com geração de questões inéditas por IA e monitoramento de foco anti-cola.",
+        highlights: [
+          "Modo Duplo: Estudo Livre com IA (geração sob demanda estilo ENEM/Bernoulli com retry multi-modelo Gemini) e Simulado Oficial por PIN.",
+          "Sistema Proctoring Anti-Cola via Page Visibility API que detecta trocas de aba/minimização e registra infrações (alertasCola) para o professor.",
+          "Carrinho docente de conteúdos na v1.2, controle de limite de tentativas por aluno e bancos locais JSON estruturados (EM1, EM2, EM3).",
+          "Painel analítico de gargalos de aprendizagem por atividade e exportação de pauta completa em Excel (.xlsx) com abas separadas por turma."
+        ],
+        stack: ["React 18", "Tailwind CSS", "Firebase Firestore", "Google Gemini API", "Page Visibility API", "SheetJS (xlsx)", "JSON Banks"]
+      },
+      {
+        id: "diario",
+        title: "Diário Escolar Inteligente (DIARIO) — OCR Multimodal Vision & Automação",
+        category: ["AI", "RPA"],
+        badge: "Visão Computacional & IA",
+        path: "./projetos/05-diario-escolar-ocr-vision",
+        summary: "Aplicação web (Glassmorphism UI) e suíte de scripts em Node.js e Python (pandas) que extrai tabelas de horários a partir de simples prints/fotos via OCR de IA e cruza com os bancos de capítulos do Bernoulli.",
+        highlights: [
+          "OCR Multimodal com Gemini 2.5 Flash Vision (callGeminiVisionAPI) que converte imagens (.png/.jpg) de horários em matrizes JSON tipadas.",
+          "Cruzamento dinâmico no navegador via SheetJS com as planilhas de capítulos do Bernoulli (EM1, EM2, EM3) filtradas por frente.",
+          "Motor local de fallback (generateFallbackPlan) que distribui automaticamente avaliações P1, P2, P3 e revisões nos dias letivos.",
+          "Tabela interativa com edição in-place (contenteditable) e exportação direta para Excel (.xlsx)."
+        ],
+        stack: ["HTML5 / Glassmorphism CSS", "JavaScript ES6+", "Gemini 2.5 Flash Vision (OCR)", "SheetJS (xlsx)", "Node.js", "Python (pandas)"]
+      },
+      {
+        id: "faltas",
+        title: "Robô Universal TOTVS (FALTAS) — Arquitetura Modular RPA em 6 Fases",
+        category: ["RPA"],
+        badge: "Motor RPA & Documentação Arquitetural",
+        path: "./projetos/06-robo-totvs-universal",
+        summary: "Biblioteca modular de automação (robo_totvs_universal.js) e roteiro arquitetural completo (Mermaid.js) que sistematiza a automação de portais educacionais legados em 6 fases independentes.",
+        highlights: [
+          "Arquitetura didática e reutilizável dividida em 6 fases: Contextualização, Login Universal, Leitor Inteligente de Excel, Estabilizador de Callbacks, Injeção com Regra do Zero e Interceptador de Pop-ups.",
+          "Detecção automática de colunas de nome e nota em planilhas heterogêneas.",
+          "Documentação técnica completa com diagramas de sequência e fluxo em Mermaid.js para treinamento de equipes."
+        ],
+        stack: ["Node.js", "Puppeteer", "SheetJS (xlsx)", "Dotenv", "Mermaid.js"]
+      },
+      {
+        id: "meu-micro-saas",
+        title: "AVA Científico & Oficina PhET (meu-micro-saas + 540 Simulações HTML5)",
+        category: ["SAAS"],
+        badge: "EdTech UI/UX & Simulação Científica",
+        path: "./projetos/07-ava-cientifico-micro-saas",
+        summary: "Protótipo de alta fidelidade em Next.js 16 para um Ambiente Virtual de Aprendizagem Científica focado em Física Geral, Preparatórios Olímpicos de Elite e integração com Laboratórios Virtuais PhET e 540 simulações HTML5.",
+        highlights: [
+          "Interface Bento Box em Dark Mode para o Painel do Professor e Portal do Aluno com rotas dedicadas de Turma, Frequência e Oficina PhET.",
+          "Arte vetorial científica customizada programada em SVG puro (malha cartesiana, órbitas, ondas senoidais e funções matemáticas).",
+          "Acompanhado do acervo 'Htmls Físicos' contendo 540 simulações interativas em HTML5/JS de Física, Química, Matemática e Astronomia."
+        ],
+        stack: ["Next.js 16", "React 19", "Tailwind CSS 4", "Custom SVG Vetorial", "HTML5 Scientific Simulations"]
+      }
+    ];
+
+    // ==================== DATA: 61 VALID CERTIFICATES ====================
+    const certificatesData = [
+      // 1. TI, GOVERNANÇA, ROBÓTICA, HARDWARE & HACKATHONS (12)
+      {
+        id: 1,
+        cat: "TI_HARDWARE",
+        file: "UFOP 2019 - 2022 - NTI - NUCLEO DE TECNOLOGIA DA INFORMAÇÃO.pdf",
+        title: "Bolsista de TI — Diretoria de Tecnologia da Informação (DTI / NTI)",
+        inst: "UFOP (Universidade Federal de Ouro Preto)",
+        role: "Bolsista de TI (20h/semana)",
+        date: "18/11/2019 a 16/02/2022",
+        hours: "2.172 horas",
+        details: "Atuação continuada por mais de 2 anos na Diretoria de Tecnologia da Informação da UFOP. Habilidades: Suporte técnico e operacional em TI, gestão de sistemas institucionais, atendimento Service Desk e governança universitária."
+      },
+      {
+        id: 2,
+        cat: "TI_HARDWARE",
+        file: "BRADESCO 2020 - COBIT 4.1.pdf",
+        title: "Fundamentos de COBIT® 4.1",
+        inst: "Fundação Bradesco | Escola Virtual",
+        role: "Concluinte",
+        date: "06/08/2020",
+        hours: "16 horas",
+        details: "Governança corporativa de TI, alinhamento estratégico entre TI e negócios, auditoria de sistemas, indicadores de desempenho (KPI/KGI) e gestão de riscos de TI."
+      },
+      {
+        id: 3,
+        cat: "TI_HARDWARE",
+        file: "BRADESCO 2020 - ITIL.pdf",
+        title: "Fundamentos de ITIL",
+        inst: "Fundação Bradesco | Escola Virtual",
+        role: "Concluinte",
+        date: "26/06/2020 a 03/07/2020",
+        hours: "16 horas",
+        details: "Gerenciamento de Serviços de TI (ITSM), estruturação de Service Desk, gestão de incidentes, problemas, mudanças, acordos de nível de serviço (SLAs) e melhoria contínua."
+      },
+      {
+        id: 4,
+        cat: "TI_HARDWARE",
+        file: "NASA APPS 2023 - CERTIFICADO AVALIADOR - NASA SPACE APPS.pdf",
+        title: "Avaliador Local — NASA Space Apps Challenge 2023",
+        inst: "Agência Espacial Brasileira (AEB) / NASA / MCTI",
+        role: "Avaliador Local (Juiz Técnico)",
+        date: "07 e 08/10/2023",
+        hours: "Hackathon (2 dias)",
+        details: "Avaliação técnica de soluções de software, protótipos web/mobile/IA, uso de APIs abertas e Open Data da NASA, viabilidade técnica e inovação."
+      },
+      {
+        id: 5,
+        cat: "TI_HARDWARE",
+        file: "NASA APPS 2023 - CERTIFICADO TUTOR - NASA SPACE APPS.pdf",
+        title: "Tutor Local — NASA Space Apps Challenge 2023",
+        inst: "Agência Espacial Brasileira (AEB) / NASA / MCTI",
+        role: "Tutor Local (Mentor Técnico)",
+        date: "07 e 08/10/2023",
+        hours: "Hackathon (2 dias)",
+        details: "Mentoria de equipes multidisciplinares em desenvolvimento ágil de MVPs, consumo de bancos de dados espaciais/climáticos da NASA, Design Thinking e pitch."
+      },
+      {
+        id: 6,
+        cat: "TI_HARDWARE",
+        file: "PETE EDUCACIONAL 2024 - INTRODUÇÃO AO MUNDO DA ROBÓTICA.pdf",
+        title: "Introdução ao Mundo da Robótica",
+        inst: "PETE Educacional",
+        role: "Concluinte",
+        date: "17/12/2024",
+        hours: "Módulos completos",
+        details: "Fundamentos de robótica aplicada e educacional, integração entre lógica de programação, sensores, atuadores eletrônicos e automação física."
+      },
+      {
+        id: 7,
+        cat: "TI_HARDWARE",
+        file: "ÓRBITA 2023 - LIDERANDO UM STEAM CLUB ONLINE.pdf",
+        title: "Liderando um STEAM Club Online (Segurança Digital)",
+        inst: "Órbita / British Council / Oi Futuro",
+        role: "Concluinte",
+        date: "11/09/2023 a 06/11/2023",
+        hours: "10 horas",
+        details: "Ementa: 1. O que é um STEAM Club online?; 2. Como definir o público e cuidar da segurança digital?; 3. Planejando atividades. Foco em segurança digital, privacidade online e liderança STEAM."
+      },
+      {
+        id: 8,
+        cat: "TI_HARDWARE",
+        file: "UFOP 2016 - PROATIVA - PROJETO DE GRADUAÇÃO - e-lixo.pdf",
+        title: "Programa Pró-Ativa — Cultura Científica e Interfaces (E-Lixo Ciclo I)",
+        inst: "UFOP — PROGRAD",
+        role: "Bolsista de Projeto",
+        date: "12/04/2016 a 30/11/2016",
+        hours: "480 horas",
+        details: "1º ciclo anual trabalhando com triagem de hardware, sucata eletrônica (e-lixo), reciclagem tecnológica (Green IT) e divulgação científica."
+      },
+      {
+        id: 9,
+        cat: "TI_HARDWARE",
+        file: "UFOP 2017 - PROATIVA - PROJETO DE GRADUAÇÃO - e-lixo.pdf",
+        title: "Programa Pró-Ativa — Utilização de E-Lixo no Desenvolvimento de Instrumentação (Ciclo II)",
+        inst: "UFOP — PROGRAD",
+        role: "Bolsista de Projeto",
+        date: "01/04/2017 a 30/11/2017",
+        hours: "480 horas",
+        details: "2º ciclo anual: engenharia reversa de dispositivos eletrônicos descartados (fontes, motores, sensores, placas) para prototipagem de instrumentos de laboratório."
+      },
+      {
+        id: 10,
+        cat: "TI_HARDWARE",
+        file: "UFOP 2018 - PROATIVA - PROJETO DE GRADUAÇÃO - e-lixo.pdf",
+        title: "Programa Pró-Ativa — Utilização de E-Lixo no Desenvolvimento de Instrumentação (Ciclo III)",
+        inst: "UFOP — PROGRAD",
+        role: "Bolsista de Projeto",
+        date: "09/04/2018 a 30/11/2018",
+        hours: "480 horas",
+        details: "3º ciclo anual consecutivo (totalizando 1.440h em hardware/eletrônica): manutenção eletrônica, calibração de sensores e cultura Maker."
+      },
+      {
+        id: 11,
+        cat: "TI_HARDWARE",
+        file: "ESMEF 2017 - APRESENTAÇÃO DE TRABALHO - EXPERIMENTOS CRIADOS COM E-LIXO NO ENSINO DE FÍSICA.pdf",
+        title: "Apresentação de Trabalho — Experimentos Criados com E-Lixo no Ensino de Física",
+        inst: "VI ESMEF — UNIFEI / FAPEMIG",
+        role: "Coautor de Trabalho",
+        date: "04 a 06/09/2017",
+        hours: "Publicação Científica",
+        details: "Publicação e apresentação em congresso dos protótipos e instrumentos construídos a partir de componentes de hardware e lixo eletrônico."
+      },
+      {
+        id: 12,
+        cat: "TI_HARDWARE",
+        file: "UFOP 2015 - 2016 - NEI - NUCLEO DE EDUCAÇÃO INCLUSIVA.pdf",
+        title: "Bolsista de Desenvolvimento Institucional — PROGRAD / Núcleo de Educação Inclusiva (NEI)",
+        inst: "UFOP — PROGRAD",
+        role: "Bolsista Administrativo",
+        date: "01/04/2015 a 11/04/2016",
+        hours: "435 horas",
+        details: "Gestão de sistemas acadêmicos, bancos de dados estudantis, automação de escritório e suporte a tecnologias assistivas/acessibilidade."
+      },
+
+      // 2. PROCESSAMENTO DIGITAL DE IMAGENS (PDI), TELESCÓPIOS ROBÓTICOS & DADOS (9)
+      {
+        id: 13,
+        cat: "PDI_DADOS",
+        file: "UNIFEI 2023 - CERTIFICADO PALESTRANTE - OFICINA DE ASTROFOTOGRAFIA PARA A EQUIPE FALCON-6 ROCKET.pdf",
+        title: "Palestrante — Treinamento sobre Astrofotografias (Equipe Falcon-6)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante / Instrutor",
+        date: "17/05/2023",
+        hours: "3 horas",
+        details: "Processamento Digital de Imagens (PDI), empilhamento estatístico (image stacking), calibração radiométrica (dark/flat/bias frames), redução de ruído e sensores CMOS/CCD."
+      },
+      {
+        id: 14,
+        cat: "PDI_DADOS",
+        file: "UNIFEI 2024 - CERTIFICADO PALESTRANTE - OFICINA DE ASTROFOTOGRAFIA PARA A EQUIPE FALCON-6 ROCKET.pdf",
+        title: "Palestrante — Oficina de Astrofotografia para a Equipe Falcon-6 Rocket Design",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante Titular",
+        date: "04/06/2024 a 06/06/2024",
+        hours: "4 horas",
+        details: "Curso de extensão completo sobre pipeline de tratamento de imagem científica, stretching de histograma, formatos RAW/FITS e softwares de astrofotografia."
+      },
+      {
+        id: 15,
+        cat: "PDI_DADOS",
+        file: "UNIFEI 2024  - CERTIFICADO PALESTRANTE - CURSO DE ASTROFOTOGRAFIA COM O CELULAR.pdf",
+        title: "Palestrante — Aula Prática de Astrofotografia Mobile em Campo",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante",
+        date: "06/06/2024",
+        hours: "2 horas",
+        details: "Fotografia computacional mobile, controle manual de sensores de smartphones (ISO, longa exposição, RAW/DNG) e acoplamento óptico afocal."
+      },
+      {
+        id: 16,
+        cat: "PDI_DADOS",
+        file: "UNIFEI 2026 - CERTIFICADO PALESTRANTE - OFICINA DE ASTROFOTOGRAFIA PARA A EQUIPE FALCON-6 ROCKET.pdf",
+        title: "Palestrante — Oficina de Astrofotografia (Workshops Falcon-6 2026)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante",
+        date: "29/05/2026",
+        hours: "2 horas",
+        details: "Capacitação técnica em captura óptica/digital e processamento de imagens astronômicas para a equipe Falcon-6 Rocket Design."
+      },
+      {
+        id: 17,
+        cat: "PDI_DADOS",
+        file: "ESAGTTP 2022 - TREINAMENTO - SAPACE FOR ALL.pdf",
+        title: "ESA_GTTP 2022 Training School: \"Space For All\"",
+        inst: "European Space Agency (ESA) / CESAR / NUCLIO",
+        role: "Participante (>75% freq.)",
+        date: "17 a 21/10/2022",
+        hours: "~25 horas (5 dias)",
+        details: "Treinamento internacional na agência espacial europeia (ESAC Madrid / Online) utilizando arquivos de dados espaciais (JWST) e telescópios robóticos (Faulkes, PETeR, NSO)."
+      },
+      {
+        id: 18,
+        cat: "PDI_DADOS",
+        file: "ESAGTTP 2024 - TREINAMENTO - ASTRONOMY ADVENTURE IN THE CANARY ISLANDS.pdf",
+        title: "Astronomy Education Adventure in the Canary Islands 2024",
+        inst: "Instituto de Astrofísica de Canarias (IAC) / ESA-CESAR / NUCLIO",
+        role: "Participante",
+        date: "22 a 26/07/2024",
+        hours: "32 horas",
+        details: "Operação remota e agendamento de observações em Telescópios Robóticos profissionais (Liverpool Telescope, Faulkes, PETeR) e redução de dados astrofísicos FITS."
+      },
+      {
+        id: 19,
+        cat: "PDI_DADOS",
+        file: "ESAGTTP 2025 - TREINAMENTO - SUN AND ECLIPSES.pdf",
+        title: "ESA-GTTP 2025 International Training Teacher Course (Sun and Eclipses)",
+        inst: "European Space Agency (ESA / ESAC) / IAC / ICE-CSIC",
+        role: "Participante",
+        date: "21 a 25/07/2025",
+        hours: "~25 horas (5 dias)",
+        details: "Análise de dados científicos de missões solares da ESA (SOHO, Solar Orbiter), uso de telescópios robóticos e modelagem de eclipses."
+      },
+      {
+        id: 20,
+        cat: "PDI_DADOS",
+        file: "G-HOU 2020 - CONFERÊNCIA - MARROCOS.pdf",
+        title: "Global Hands-On Universe 2020 Conference (Marrocos / Virtual)",
+        inst: "Global Hands-On Universe (G-HOU) / IASC / NUCLIO",
+        role: "Participante",
+        date: "22 a 28/08/2020",
+        hours: "Conferência (7 dias)",
+        details: "Análise de imagens astronômicas reais (SalsaJ / Astrometrica), ciência cidadã guiada por dados (IASC) e redes de telescópios remotos."
+      },
+      {
+        id: 21,
+        cat: "PDI_DADOS",
+        file: "G-HOU 2023 - CONFERÊNCIA - KAGOSHIMA, JAPÃO.pdf",
+        title: "Global Hands-On Universe 2023 Conference (Kagoshima, Japão & Online)",
+        inst: "Global Hands-On Universe (G-HOU) / IASC / NSO",
+        role: "Participante",
+        date: "23 a 27/08/2023",
+        hours: "Conferência (5 dias)",
+        details: "Conferência internacional sobre processamento de dados astronômicos, operação remota de instrumentação científica e educação STEAM."
+      },
+
+      // 3. ENGENHARIA AEROESPACIAL, PROPULSÃO & FALCON-6 (14)
+      {
+        id: 22,
+        cat: "AEROESPACIAL",
+        file: "skylinespace Lucas Drumond de Magalhães Cabral.pdf",
+        title: "Internship & Project Trainee Programme — Domain: Rocket Design Technology",
+        inst: "Skyline Space (Coimbatore, Índia) — Vínculo UNIFEI",
+        role: "Project Trainee (Estagiário)",
+        date: "05/09/2026 a 05/10/2026",
+        hours: "1 mês (Estágio)",
+        details: "Estágio internacional em tecnologia de projeto de foguetes (Credencial SYLPC/RDT5/PT36/2026), engenharia de sistemas espaciais e colaboração internacional em inglês."
+      },
+      {
+        id: 23,
+        cat: "AEROESPACIAL",
+        file: "USP 2026 - Introdução a Engenharia Aeroespacial.pdf",
+        title: "Fundamentos da Engenharia Aeroespacial",
+        inst: "USP — Escola de Engenharia de São Carlos (EESC-USP)",
+        role: "Concluinte (Aprovado 100%)",
+        date: "30/03/2026 a 03/04/2026",
+        hours: "40 horas",
+        details: "Modelagem matemática e física de aerodinâmica, mecânica de voo, estruturas aeroespaciais, propulsão aeronáutica/espacial e dinâmica orbital."
+      },
+      {
+        id: 24,
+        cat: "AEROESPACIAL",
+        file: "AEB 2025 - CURSO -  INSTRODUÇÃO A PROPULSÃO ESPACIAL.pdf",
+        title: "Introdução à Propulsão Espacial (1ª Turma 2025)",
+        inst: "Agência Espacial Brasileira (AEB)",
+        role: "Concluinte",
+        date: "12/04/2025",
+        hours: "40 horas",
+        details: "Ementa: Conceitos fundamentais; Conservação de momento e Equação de Tsiolkovsky; Princípios de propulsão; Sistemas de propulsão química."
+      },
+      {
+        id: 25,
+        cat: "AEROESPACIAL",
+        file: "AEB 2023 - CURSO - UM VOO PELO UNIVERSO DOS FOGUETES.pdf",
+        title: "Um Voo pelo Universo dos Foguetes: Teoria e Prática",
+        inst: "Agência Espacial Brasileira (AEB) / IFRN",
+        role: "Concluinte",
+        date: "12/07/2023",
+        hours: "20 horas",
+        details: "Ementa: Histórico e Corrida Espacial; Funcionamento dos Foguetes; Centros de Lançamento e Foguetes Brasileiros; Criando seu próprio Foguete."
+      },
+      {
+        id: 26,
+        cat: "AEROESPACIAL",
+        file: "AEB 2025 - CURSO - INTRODUÇÃO A FÍSICA DE FOGUETES APLICADO AO ENSINO MÉDIO.pdf",
+        title: "Introdução à Física de Foguetes Aplicado ao Ensino de Ciências Espaciais — Conceitos Iniciais",
+        inst: "Agência Espacial Brasileira (AEB) / UFRN",
+        role: "Concluinte",
+        date: "08/04/2025",
+        hours: "12 horas",
+        details: "Ementa: Importância de medir (metrologia e tratamento de dados); Grandezas vetoriais; Programa Espacial Brasileiro; C&T Espacial."
+      },
+      {
+        id: 27,
+        cat: "AEROESPACIAL",
+        file: "AEB 2025 - CURSO - INTRODUÇÃO A FÍSICA DOS FOGUETES APLICADO A CIENCIAS ESPACIAIS.pdf",
+        title: "Introdução à Física de Foguetes — Espaço, Movimentos, Gravidade e Peso",
+        inst: "Agência Espacial Brasileira (AEB) / UFRN",
+        role: "Concluinte",
+        date: "08/04/2025",
+        hours: "12 horas",
+        details: "Ementa: Como chegar ao espaço; Estudo dos movimentos dos foguetes; Gravidade x Peso; Diferença de Entrada e Saída; Mecânica orbital e velocidade de escape."
+      },
+      {
+        id: 28,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2022 - COORDENADOR EXTERNO.pdf",
+        title: "Coordenador Externo — Projeto Falcon-6 Rocket Design: Equipe de Competição Tecnológica",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Coordenador Externo",
+        date: "10/10/2022 a 31/12/2022",
+        hours: "20 horas",
+        details: "Coordenação externa e liderança técnica de equipe universitária multidisciplinar de engenharia de foguetes (propulsão, aviônica, estruturas, simulação)."
+      },
+      {
+        id: 29,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2024 - CERTIFICADO CONSULTOR-TUTOR.pdf",
+        title: "Consultor / Tutor — Equipe Falcon-6 Rocket Design (Ciclo 2024)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Consultor / Tutor Técnico",
+        date: "11/03/2024 a 31/12/2024",
+        hours: "40 horas",
+        details: "Consultoria técnico-científica anual em modelagem de voo, análise de testes estáticos, telemetria e revisão de projetos da equipe Falcon-6."
+      },
+      {
+        id: 30,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2025 - CERTIFICADO CONSULTOR-TUTOR - 2ºSEMESTRE.pdf",
+        title: "Consultor / Tutor — Equipe Falcon-6 Rocket Design (Ciclo 2025)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Consultor / Tutor Técnico",
+        date: "08/04/2025 a 31/12/2025",
+        hours: "40 horas",
+        details: "Acompanhamento técnico contínuo de simulações, cálculos de estabilidade e desenvolvimento de protótipos aeroespaciais ao longo de 2025."
+      },
+      {
+        id: 31,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2023 - CERTIFICADO DE MINISTRANTE - FUNDAMENTOS FÍSICOS POR TRÁS DA CONSTRUÇÃO DE UM FOGUETE.pdf",
+        title: "Ministrante — Fundamentos Físicos por trás da Construção de um Foguete",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Ministrante",
+        date: "18/04/2023 a 19/04/2023",
+        hours: "20 horas",
+        details: "Elaboração e docência de capacitação técnica em balística, propulsão e aerodinâmica para os membros da equipe de engenharia Falcon-6."
+      },
+      {
+        id: 32,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2025 - CERTIFICADO MINISTRANTE.pdf",
+        title: "Ministrante — A Física por trás de um Foguete: Minicurso UNIFEI",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Ministrante",
+        date: "02/04/2025 a 28/04/2025",
+        hours: "30 horas",
+        details: "Planejamento, modelagem matemática e docência de minicurso sobre física de foguetes no Instituto de Engenharias Integradas da UNIFEI."
+      },
+      {
+        id: 33,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI  2025 - CERTIFICADO PALESTRANTE - FUNDAMENTOS FÍSICOS POR TRÁS DA CONSTRUÇÃO DE UM FOGUETE.pdf",
+        title: "Palestrante — A Física por trás de um Foguete (Aulas Geral e Aplicada à Falcon-6)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante",
+        date: "07/04/2025 a 28/04/2025",
+        hours: "6 horas",
+        details: "Ministrou os dois encontros técnicos aplicando equações de empuxo e estabilidade diretamente aos foguetes da equipe Falcon-6."
+      },
+      {
+        id: 34,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2026 - RELATORIO ATIVIDADES FALCON-6.pdf",
+        title: "Reunião Geral de Apresentação de Atividades da Falcon-6 aos Professores Apoiadores",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Professor Apoiador / Avaliador",
+        date: "15/05/2026",
+        hours: "3 horas",
+        details: "Revisão técnica (Design Review) dos relatórios e resultados dos subsistemas da equipe Falcon-6 Rocket Design."
+      },
+      {
+        id: 35,
+        cat: "AEROESPACIAL",
+        file: "UNIFEI 2025 - CERTIFICADO PARTICIPANTE - RODA DE CONVERSA COM CALVIN TRUBIENE - CO-FUNDADOR E PORTA VOZ DA LASC.pdf",
+        title: "Roda de Conversa com Calvin Trubiene — Co-Fundador da Latin American Space Challenge (LASC)",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Participante",
+        date: "27/03/2025",
+        hours: "2 horas",
+        details: "Requisitos de engenharia de sistemas espaciais, telemetria e protocolos para foguetes experimentais e satélites na competição LASC."
+      },
+
+      // 4. FORMAÇÃO ACADÊMICA, FÍSICA, ASTROFÍSICA E INSTRUMENTAÇÃO (20)
+      {
+        id: 36,
+        cat: "ACADEMICO",
+        file: "UFOP 2022 - DIPLOMA GRADUAÇÃO.pdf",
+        title: "Diploma de Graduação — Licenciado em Física",
+        inst: "UFOP (Universidade Federal de Ouro Preto)",
+        role: "Graduado / Diplomado",
+        date: "16/02/2022",
+        hours: "Graduação Plena",
+        details: "Base sólida em Cálculo Diferencial e Integral, Álgebra Linear, Estatística e Tratamento de Dados Experimentais, Física Computacional, Eletrônica e Mecânica Quântica."
+      },
+      {
+        id: 37,
+        cat: "ACADEMICO",
+        file: "USP 2025 - CURSO APERFEIÇOAMENTO - ASTRONOMIA PARA DOCENTES DO ENSINO MÈDIO.pdf",
+        title: "Curso de Aperfeiçoamento — Astronomia para Docentes do Ensino Médio",
+        inst: "USP — Instituto de Astronomia, Geofísica e Ciências Atmosféricas (IAG-USP)",
+        role: "Concluinte (Aprovado)",
+        date: "02/03/2024 a 09/12/2024",
+        hours: "239 horas",
+        details: "Curso anual de aperfeiçoamento (239h) no IAG-USP envolvendo astrofísica, mecânica celeste, análise de dados astronômicos e simuladores digitais."
+      },
+      {
+        id: 38,
+        cat: "ACADEMICO",
+        file: "ON - MCTI 2015 - COSMOLOGIA DA ORIGEM AO FIM DO UNIVERSO.pdf",
+        title: "Cosmologia — Da Origem ao Fim do Universo",
+        inst: "Observatório Nacional (ON / MCTI)",
+        role: "Concluinte (Média 8,2)",
+        date: "10/08/2015",
+        hours: "120 horas",
+        details: "10 módulos (120h): Relatividade Geral, modelos cosmológicos matemáticos, história térmica do universo e gravitação quântica."
+      },
+      {
+        id: 39,
+        cat: "ACADEMICO",
+        file: "MAST 2022 - O CÉU COMO MARCADOR DE TEMPO.PDF",
+        title: "O Céu como Marcador do Tempo",
+        inst: "MAST / MCTI (Museu de Astronomia e Ciências Afins)",
+        role: "Concluinte",
+        date: "06/06/2022 a 29/08/2022",
+        hours: "60 horas",
+        details: "Astronomia de posição, geometria celeste, metrologia do tempo, relógios solares e softwares de efemérides."
+      },
+      {
+        id: 40,
+        cat: "ACADEMICO",
+        file: "UDESC 2023 - CURSO - ASTREONOMIA PARA PROFESSORES DOS ANOS INICIAIS DO FUNDAMENTAL II.pdf",
+        title: "Astronomia para Professores do Ensino Fundamental",
+        inst: "UDESC (Universidade do Estado de Santa Catarina)",
+        role: "Concluinte",
+        date: "Jun a Out/2023",
+        hours: "60 horas",
+        details: "Curso de extensão universitária de 60h em ciências espaciais e metodologias de ensino."
+      },
+      {
+        id: 41,
+        cat: "ACADEMICO",
+        file: "FACED 2024 - CURSO - ASTRONOMIA PARA O ENSINO FUNDAMENTAL NA BNCC.pdf",
+        title: "Astronomia para o Ensino Fundamental na BNCC: Conteúdos e Estratégias",
+        inst: "UFU (Universidade Federal de Uberlândia — FACED)",
+        role: "Concluinte",
+        date: "22/01/2024 a 30/03/2024",
+        hours: "40 horas",
+        details: "Ementa no verso destaca coleta de dados observacionais, plataforma Moodle e emprego de simulações computacionais para modelagem de fenômenos."
+      },
+      {
+        id: 42,
+        cat: "ACADEMICO",
+        file: "UFSC 2022 - CURSO - ASTROFÍSICA I.pdf",
+        title: "Curso de Extensão em Astrofísica I",
+        inst: "UFSC (Universidade Federal de Santa Catarina)",
+        role: "Concluinte",
+        date: "14/09/2022 a 03/03/2023",
+        hours: "30 horas",
+        details: "Ementa: Gravitação, Luz, Óptica, Instrumentos Astrofísicos, Sistema Solar, Sol, Exoplanetas (fotometria/espectroscopia) e Astrobiologia."
+      },
+      {
+        id: 43,
+        cat: "ACADEMICO",
+        file: "UFSC 2022 - CURSO - ASTRONOMIA E ASTRONÁUTICA.pdf",
+        title: "Curso de Astronomia e Astronáutica (Nível Galileu Galilei)",
+        inst: "UFSC (Universidade Federal de Santa Catarina)",
+        role: "Concluinte",
+        date: "06/06/2022 a 25/02/2023",
+        hours: "20 horas",
+        details: "Ementa: Coordenadas geográficas, Medição do Tempo, Gravitação, Sistema Solar, Aviões, Foguetes, Satélites e Programa Espacial Brasileiro."
+      },
+      {
+        id: 44,
+        cat: "ACADEMICO",
+        file: "UFOP 2019 - OAEM - PROJETO GRADUAÇÃO - MANUTENÇÃO E CONSERVAÇÂO DO OBSERVATÓRIO DA ESCOLA DE MINAS.pdf",
+        title: "Manutenção e Conservação do Observatório Astronômico da Escola de Minas (OAEM)",
+        inst: "UFOP — Escola de Minas",
+        role: "Colaborador Técnico",
+        date: "Mai a Dez/2019",
+        hours: "50 horas",
+        details: "Manutenção preventiva/corretiva e operação técnica do Telescópio Refrator 200 mm da Escola de Minas e atendimento ao público."
+      },
+      {
+        id: 45,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2026 - CERTIFICADO PALESTRANTE - OFICINA DE MANUSEIO, MONTAGEM E USO DO TELESCÓPIO.pdf",
+        title: "Palestrante — Oficina de Manuseio, Montagem e Uso do Telescópio",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Palestrante",
+        date: "29/05/2026",
+        hours: "2 horas",
+        details: "Instrumentação óptica de precisão, balanceamento mecânico, colimação e sistemas de coordenadas celestes."
+      },
+      {
+        id: 46,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2023 - CERTIFICADO CONSULTOR TUTOR - OBSERVAÇÃO ASTRONOMICA.pdf",
+        title: "Consultor / Tutor — Observação do Céu Noturno na UNIFEI com a Equipe Falcon-6",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Consultor / Tutor",
+        date: "12/05/2023 a 31/07/2023",
+        hours: "15 horas",
+        details: "Planejamento técnico com softwares de mapeamento celeste e tutoria de instrumentação astronômica."
+      },
+      {
+        id: 47,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2023 - CERTIFICADO INSTRUTOR - OBSERVAÇÃO DO CÉU NOTURNO.pdf",
+        title: "Instrutor — Observação do Céu Noturno na UNIFEI Campus Itabira",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Instrutor",
+        date: "13/05/2023 a 31/07/2023",
+        hours: "3 horas",
+        details: "Instrução prática e calibração de telescópios em campo na UNIFEI."
+      },
+      {
+        id: 48,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2024 - ON THE MOON AGAIN - 2a. edição.pdf",
+        title: "Instrutor — On The Moon Again (2ª Edição) na UNIFEI",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Instrutor",
+        date: "14/06/2024",
+        hours: "3 horas",
+        details: "Condução prática de observação lunar e planetária no evento internacional On The Moon Again."
+      },
+      {
+        id: 49,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2025 - CERTIFICADO CONSULTOR-TUTOR.pdf",
+        title: "Consultor / Tutor — On The Moon Again (3ª Edição) na UNIFEI",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Consultor / Tutor",
+        date: "02/06/2025 a 10/06/2025",
+        hours: "5 horas",
+        details: "Planejamento técnico e tutoria da equipe organizadora para a 3ª edição do evento On The Moon Again."
+      },
+      {
+        id: 50,
+        cat: "ACADEMICO",
+        file: "UNIFEI 2025 - ON THE MOON AGAIN – 3a. edição.pdf",
+        title: "Participante — On The Moon Again (3ª Edição) na UNIFEI",
+        inst: "UNIFEI — Campus Itabira",
+        role: "Participante",
+        date: "06/06/2025",
+        hours: "3 horas",
+        details: "Sessão de observação astronômica noturna no campus de Itabira."
+      },
+      {
+        id: 51,
+        cat: "ACADEMICO",
+        file: "UFOP 2016 - SEF - CERTIFICADO PALESTRANTE - OPTICAL SOCIETY OF AMERICA.pdf",
+        title: "Palestrante — VII Semana de Estudos de Física (Optical Society of America - OSA)",
+        inst: "UFOP — DAFIS / ICEB",
+        role: "Palestrante",
+        date: "09 a 13/04/2016",
+        hours: "Palestra",
+        details: "Palestra sobre óptica, fotônica, optoeletrônica e a Optical Society of America (OSA / Optica)."
+      },
+      {
+        id: 52,
+        cat: "ACADEMICO",
+        file: "UFOP 2016 - SEF - CERTIFICADO DE PARTICIPANTE.pdf",
+        title: "Participante — VII Semana de Estudos de Física",
+        inst: "UFOP — DAFIS / ICEB",
+        role: "Participante",
+        date: "09 a 13/04/2016",
+        hours: "12 horas",
+        details: "Ciclo acadêmico de física experimental, teórica e aplicada."
+      },
+      {
+        id: 53,
+        cat: "ACADEMICO",
+        file: "SEFIMAT 2017 - CERTIFICADO PARTICIPANTE - DE ONDE VEIO A MECÂNICA QUÂNTICA.pdf",
+        title: "Minicurso — De onde veio a Mecânica Quântica? (VI SEFIMAT & VIII SEF)",
+        inst: "UFOP — Pós-Graduação em Física de Materiais (FIMAT)",
+        role: "Participante",
+        date: "06 a 10/11/2017",
+        hours: "4 horas",
+        details: "Fundamentos físicos e algébricos da Mecânica Quântica e Física de Materiais."
+      },
+      {
+        id: 54,
+        cat: "ACADEMICO",
+        file: "SEFIMAT 2017 - CERTIFICADO PARTICIPANTE- FÍSICA NUCLEAR NOS REATORES E NA ASTROFÍSICA.pdf",
+        title: "Minicurso — Física Nuclear nos Reatores e na Astrofísica",
+        inst: "UFOP — Pós-Graduação em Física de Materiais (FIMAT)",
+        role: "Participante",
+        date: "06 a 10/11/2017",
+        hours: "3 horas",
+        details: "Modelagem física de reatores nucleares e processos astrofísicos."
+      },
+      {
+        id: 55,
+        cat: "ACADEMICO",
+        file: "1ª Semana Internacional da Filosofia da Física e Cosmologia.pdf",
+        title: "1ª Semana Internacional de Filosofia da Física e da Cosmologia",
+        inst: "Grupo de Pesquisa Phisykós (Even3)",
+        role: "Participante",
+        date: "26 a 29/09/2023",
+        hours: "20 horas",
+        details: "Epistemologia científica, lógica e fundamentos conceituais da física moderna."
+      },
+
+      // 5. METODOLOGIAS ÁGEIS/ATIVAS, PBL, PUBLICAÇÕES & PREMIAÇÕES (6)
+      {
+        id: 56,
+        cat: "METODOLOGIAS",
+        file: "VII CIM 2024 - ARTIGO COMPLETO - ENSINO INVESTIGATIVO EM AULAS DE FÍSICA EXPERIMENTAL.pdf",
+        title: "Autor de Artigo Completo — Ensino Investigativo em Aulas de Física Experimental no Ensino Superior",
+        inst: "VII Congresso de Inovação e Metodologias no Ensino Superior e Tecnológico (UFOP/UFMG/UFLA)",
+        role: "Autor / Apresentador",
+        date: "13/09/2024",
+        hours: "Artigo Completo",
+        details: "Publicação científica completa com análise de caso, coleta e tratamento estatístico de dados em laboratório universitário."
+      },
+      {
+        id: 57,
+        cat: "METODOLOGIAS",
+        file: "VII CIM 2024 - CERTIFICADO PARTICIPANTE - CONGRESSO DE INOVAÇÃO E METODOLOGIAS NO ENSINO SUPERIOR E TECNOLÓGICO.pdf",
+        title: "Participante — VII Congresso de Inovação e Metodologias no Ensino Superior e Tecnológico",
+        inst: "VII CIM (UFOP / UFMG / UFLA / IFNMG)",
+        role: "Participante",
+        date: "12 e 13/09/2024",
+        hours: "10 horas",
+        details: "Inovação tecnológica, transformação digital e metodologias ativas no ensino superior."
+      },
+      {
+        id: 58,
+        cat: "METODOLOGIAS",
+        file: "OBMEP 2023 - PROFESSOR.pdf",
+        title: "Professor Premiado — 18ª Olimpíada Brasileira de Matemática (OBMEP 2023)",
+        inst: "IMPA (Instituto de Matemática Pura e Aplicada) / SBM / MCTI / MEC",
+        role: "Professor Orientador Homenageado",
+        date: "Dezembro de 2023",
+        hours: "Premiação Nacional",
+        details: "Reconhecimento nacional do IMPA pelo desempenho e premiação de alunos sob sua orientação na 18ª OBMEP (Colégio Auge)."
+      },
+      {
+        id: 59,
+        cat: "METODOLOGIAS",
+        file: "NOVA ESCOLA 2022 - CURSO - COORDENADOR PEDAGÓGICO.pdf",
+        title: "Coordenador Pedagógico: Métodos Ativos para a Formação de Professores",
+        inst: "Associação Nova Escola",
+        role: "Concluinte",
+        date: "31/07/2022 a 03/08/2022",
+        hours: "30 horas",
+        details: "Gestão de equipes, planejamento estratégico, observação de processos, cultura de feedback estruturado (devolutivas) e sistematização."
+      },
+      {
+        id: 60,
+        cat: "METODOLOGIAS",
+        file: "NOVA ESCOLA 2022 - CURSO - METODOLOGIAS ATIVAS ENSINO HIBRIDO E APRENDIZAGEM BASEADA EM PROJETOS.pdf",
+        title: "Metodologias Ativas: Ensino Híbrido e Aprendizagem Baseada em Projetos (PBL)",
+        inst: "Associação Nova Escola",
+        role: "Concluinte",
+        date: "03/08/2022",
+        hours: "10 horas",
+        details: "Aprendizagem Baseada em Projetos (Project-Based Learning - PBL), Ensino Híbrido mediado por tecnologia e estudos de caso."
+      },
+      {
+        id: 61,
+        cat: "METODOLOGIAS",
+        file: "ACS na UFOP.pdf",
+        title: "ACS na UFOP — Como ter sucesso na publicação dos resultados da sua pesquisa",
+        inst: "American Chemical Society (ACS Publications) & UFOP",
+        role: "Participante",
+        date: "07 e 09/06/2022",
+        hours: "3 horas",
+        details: "Comunicação e visualização de dados científicos (Data Storytelling), escrita técnica internacional e integridade de dados."
+      }
+    ];
+
+    function switchTab(tabId) {
+      ['portfolio', 'curriculo', 'certificados', 'auditoria'].forEach(id => {
+        document.getElementById('tab-' + id).classList.toggle('hidden', id !== tabId);
+        const btn = document.getElementById('tab-btn-' + id);
+        if (id === tabId) {
+          btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20";
+        } else {
+          btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800";
+        }
+      });
+    }
+
+    function filterPortfolio(category) {
+      const container = document.getElementById('portfolio-grid');
+      const filtered = category === 'ALL'
+        ? portfolioProjects
+        : portfolioProjects.filter(p => p.category.includes(category));
+
+      container.innerHTML = filtered.map(p => `
+        <article class="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 transition-all flex flex-col justify-between gap-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-mono uppercase px-2.5 py-1 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">${p.badge}</span>
+              <span class="text-[11px] font-mono text-slate-400 truncate max-w-[230px]" title="${p.path}">${p.path}</span>
+            </div>
+            <h3 class="text-xl font-bold text-white">${p.title}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">${p.summary}</p>
+            <div class="pt-2">
+              <div class="text-xs font-mono uppercase text-slate-400 mb-1.5">Destaques de Engenharia:</div>
+              <ul class="space-y-1.5 text-xs text-slate-300">
+                ${p.highlights.map(h => `<li class="flex items-start gap-2"><i class="ph-bold ph-check-circle text-cyan-400 mt-0.5 shrink-0"></i><span>${h}</span></li>`).join('')}
+              </ul>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex flex-wrap gap-1.5">
+            ${p.stack.map(s => `<span class="px-2 py-0.5 rounded bg-slate-950 text-slate-300 border border-slate-800 text-[11px] font-mono">${s}</span>`).join('')}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderCertificates() {
+      const query = (document.getElementById('cert-search').value || '').toLowerCase();
+      const cat = document.getElementById('cert-category').value;
+
+      const filtered = certificatesData.filter(c => {
+        const matchesCat = cat === 'ALL' || c.cat === cat;
+        const matchesQuery = !query ||
+          c.title.toLowerCase().includes(query) ||
+          c.inst.toLowerCase().includes(query) ||
+          c.details.toLowerCase().includes(query) ||
+          c.file.toLowerCase().includes(query);
+        return matchesCat && matchesQuery;
+      });
+
+      document.getElementById('cert-count').textContent = `Exibindo ${filtered.length} de ${certificatesData.length} certificados analisados`;
+
+      const container = document.getElementById('cert-list');
+      container.innerHTML = filtered.map(c => `
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 transition-all flex flex-col justify-between gap-3">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-cyan-300">#${c.id} • ${c.role}</span>
+              <span class="text-xs font-mono font-semibold text-emerald-400">${c.hours}</span>
+            </div>
+            <h4 class="font-bold text-white text-sm">${c.title}</h4>
+            <div class="text-xs text-slate-400">${c.inst} • <span class="text-slate-300">${c.date}</span></div>
+            <p class="text-xs text-slate-300 leading-relaxed pt-1">${c.details}</p>
+          </div>
+          <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <span class="text-[11px] font-mono text-slate-400 truncate" title="${c.file}">${c.file}</span>
+            <a href="./Certificados/${encodeURIComponent(c.file)}" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 text-xs font-medium flex items-center gap-1.5 shrink-0">
+              <i class="ph-bold ph-file-pdf"></i> Abrir PDF
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize views
+    filterPortfolio('ALL');
+    renderCertificates();
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+# ============================================================================
+# 🔒 BLINDAGEM DE SEGURANÇA & CONFORMIDADE LGPD (.gitignore)
+# Repositório de Portfólio & Currículo — Lucas Drumond Cabral
+# ============================================================================
+
+# 1. PROTEÇÃO DE DOCUMENTOS PESSOAIS & CERTIFICADOS ORIGINAIS (LGPD)
+# Certificados em PDF contêm CPF, matrícula, assinaturas e dados de terceiros.
+# NUNCA devem ser versionados em repositórios públicos.
+Certificados/
+_quarentena_local_nao_subir/
+*.pdf
+*.PDF
+*.msi
+*.MSI
+
+# 2. CREDENCIAIS, VARIÁVEIS DE AMBIENTE E CHAVES PRIVADAS
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+*.cer
+*.crt
+secrets.*
+credentials.*
+
+# 3. PLANILHAS DE ALUNOS, CLIENTES E DADOS OPERACIONAIS (LGPD)
+*.xlsx
+*.xls
+*.csv
+*.ods
+
+# 4. SESSÕES DE NAVEGADOR, COOKIES E PERFIS PUPPETEER/CHROME
+.chrome-app-profile/
+chrome_profile/
+user_data/
+.puppeteer/
+cookies.json
+session.json
+
+# 5. BINÁRIOS, EXECUTÁVEIS, COMPILADOS E CAPTURAS DE TELA DE SISTEMAS INTERNOS
+*.exe
+*.dll
+*.zip
+*.tar.gz
+*.rar
+*screenshot*.png
+*login_resultado*.png
+backup/
+
+# 6. DEPENDÊNCIAS, BUILDS E ARQUIVOS DE SISTEMA
+node_modules/
+.next/
+dist/
+build/
+out/
+.vercel/
+.firebase/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+desktop.ini

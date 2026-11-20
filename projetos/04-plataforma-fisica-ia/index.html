@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulados de Física - CNSD</title>
+  
+  <!-- Tailwind CSS para o Design -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Babel para rodar o React nativamente no navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Mapeamento de Bibliotecas -->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.292.0",
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans relative min-h-screen flex flex-col">
+  <!-- NOVO BACKGROUND: Malha pontilhada elegante (Plano Cartesiano/Física) -->
+  <div class="fixed inset-0 z-[-1] h-full w-full bg-slate-50 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px]"></div>
+  <div class="fixed inset-0 z-[-1] h-full w-full bg-gradient-to-br from-transparent via-slate-50/50 to-slate-200/50"></div>
+
+  <div id="root" class="flex-1 flex flex-col"></div>
+
+  <!-- APLICAÇÃO PRINCIPAL -->
+  <script type="text/babel" data-type="module">
+    import React, { useState, useEffect } from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { 
+      Atom, CheckCircle2, XCircle, AlertCircle, Loader2, RotateCcw, 
+      Lock, Users, GraduationCap, X, Eye, Search, Link as LinkIcon, History,
+      FileSpreadsheet, AlertTriangle, Clock, BarChart3, KeyRound, Key, LogOut,
+      ChevronRight, Layers, ShieldCheck, ChevronLeft, Filter, TrendingUp, Trash2
+    } from 'lucide-react';
+    import { initializeApp } from 'firebase/app';
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
+    import { getFirestore, collection, addDoc, onSnapshot, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+
+    // ==========================================
+    // 1. CONFIGURAÇÃO DO FIREBASE
+    // ==========================================
+    const isCanvas = typeof __firebase_config !== 'undefined' && __firebase_config;
+
+    const firebaseConfig = isCanvas ? JSON.parse(__firebase_config) : {
+      apiKey: "SUA_CHAVE_API_AQUI",
+      authDomain: "simulado-bernoulli.firebaseapp.com",
+      projectId: "simulado-bernoulli",
+      storageBucket: "simulado-bernoulli.firebasestorage.app",
+      messagingSenderId: "408636276045",
+      appId: "1:408636276045:web:f30f4e07b3e9caa90a8b04",
+      measurementId: "G-9EQ2E2K3FM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const CHAVE_MESTRA_PROFESSOR = "BERNOULLI-2026";
+    
+    // =========================================================================
+    // 🔑 CHAVE DA INTELIGÊNCIA ARTIFICIAL (GEMINI) - COLE A SUA AQUI!
+    // =========================================================================
+    const apiKey = "SUA_CHAVE_API_AQUI"; 
+    
+    const appId = typeof __app_id !== 'undefined' && __app_id ? __app_id : "simulado-bernoulli-prod";
+
+    // ==========================================
+    // 2. CURRÍCULO E DADOS BASE
+    // ==========================================
+    const turmasLista = ["1º 103", "1º 104", "2º 203", "2º 204", "3º 205", "3º 207"];
+
+    const curriculoFisica = {
+      "1ª Série": {
+        "Frente A": ["A1 - Capítulo 1: Conhecendo a Física", "A2 - Capítulo 2: Movimentos Simultâneos", "A3 - Capítulo 3: Leis de Newton: Foguetes", "A4 - Capítulo 4: Aplicações das Leis de Newton", "A5 - Capítulo 5: Movimento Circular", "A6 - Capítulo 6: Mecânica Celeste", "A7 - Capítulo 7: Trabalho e Energia Mecânica", "A8 - Capítulo 8: Impulso e Quantidade de Movimento"],
+        "Frente B": ["B1 - Capítulo 1: Fundamentos da Óptica Geométrica", "B2 - Capítulo 2: Reflexão da Luz", "B3 - Capítulo 3: Refração da Luz", "B4 - Capítulo 4: Hidrostática"]
+      },
+      "2ª Série": {
+        "Frente A": ["A1 - Capítulo 1: Movimento Periódico", "A2 - Capítulo 2: Difração e Ondas Sonoras", "A3 - Capítulo 3: Eletrização, Força e Campo elétrico", "A4 - Capítulo 4: Trabalho e Potencial Elétrico", "A5 - Capítulo 5: Circuito Elétrico", "A6 - Capítulo 6: Dispositivos Elétricos", "A7 - Capítulo 7: Campo Magnético", "A8 - Capítulo 8: Indução Eletromagnética"],
+        "Frente B": ["B1 - Capítulo 1: Introdução à Termologia", "B2 - Capítulo 2: Calorimetria", "B3 - Capítulo 3: Gases e Primeira Lei da Termodinâmica", "B4 - Capítulo 4: Segunda Lei da Termodinâmica"]
+      },
+      "3ª Série": {
+        "Frente A": ["A1 - Cap 1: Cinemática Escalar", "A2 - Cap 2: Cinemática Vetorial", "A3 - Cap 3: Lançamento de Projéteis", "A4 - Cap 4: Movimento Circular", "A5 - Cap 5: Leis de Newton - Fundamentos", "A6 - Cap 6: Leis de Newton - Aplicações", "A7 - Cap 7: Dinâmica do MCU", "A8 - Cap 8: Trabalho e Energia", "A9 - Cap 9: Hidrostática"],
+        "Frente B": ["B1 - Cap 1: Termometria", "B2 - Cap 2: Calorimetria", "B3 - Cap 3: Gases", "B4 - Cap 4: Termodinâmica", "B5 - Cap 5: Óptica Geométrica", "B6 - Cap 6: Reflexão", "B7 - Cap 7: Refração", "B8 - Cap 8: Instrumentos Ópticos", "B9 - Cap 9: Ondulatória"],
+        "Frente C": ["C1 - Cap 1: Força Elétrica", "C2 - Cap 2: Campo Elétrico", "C3 - Cap 3: Potencial Elétrico", "C4 - Cap 4: Corrente Elétrica", "C5 - Cap 5: Resistores", "C6 - Cap 6: Medidas Elétricas", "C7 - Cap 7: Capacitores", "C8 - Cap 8: Campo Magnético", "C9 - Cap 9: Força Magnética"]
+      }
+    };
+
+    const loadExcelLibrary = () => {
+      return new Promise((resolve, reject) => {
+        if (window.XLSX) return resolve();
+        const script = document.createElement('script');
+        script.src = "https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js";
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error("Erro no exportador."));
+        document.body.appendChild(script);
+      });
+    };
+
+    const formatarTempo = (segundos) => {
+        const m = Math.floor(segundos / 60).toString().padStart(2, '0');
+        const s = (segundos % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    };
+
+    const getAllowedSeries = (turma) => {
+      if (!turma) return Object.keys(curriculoFisica);
+      if (turma.startsWith('1º')) return ['1ª Série'];
+      if (turma.startsWith('2º')) return ['1ª Série', '2ª Série'];
+      if (turma.startsWith('3º')) return ['1ª Série', '2ª Série', '3ª Série'];
+      return Object.keys(curriculoFisica);
+    };
+
+    // Componente de Rodapé (Copyright)
+    const Footer = () => (
+      <footer className="w-full text-center py-8 text-slate-500 text-xs font-bold mt-auto">
+        <p>© 2026 Desenvolvido por Lucas Drumond. Todos os direitos reservados.</p>
+        <p className="mt-1 opacity-60">Versão 3.5 - Sistema de Avaliação</p>
+      </footer>
+    );
+
+    function App() {
+      const [fbUser, setFbUser] = useState(null);
+      const [appUser, setAppUser] = useState(null);
+      const [authMode, setAuthMode] = useState('login');
+      const [authRole, setAuthRole] = useState('aluno');
+      const [loginUsername, setLoginUsername] = useState('');
+      const [loginPassword, setLoginPassword] = useState('');
+      const [loginNome, setLoginNome] = useState('');
+      const [loginTurma, setLoginTurma] = useState('');
+      const [teacherAccessKey, setTeacherAccessKey] = useState('');
+      
+      const [loading, setLoading] = useState(false);
+      const [alertMessage, setAlertMessage] = useState(null);
+      const [provaToDelete, setProvaToDelete] = useState(null);
+      const [userToDelete, setUserToDelete] = useState(null);
+
+      // ALUNO STATES
+      const [modoEntrada, setModoEntrada] = useState('ia'); 
+      const [pinAluno, setPinAluno] = useState('');
+      const [serie, setSerie] = useState('');
+      const [frente, setFrente] = useState('');
+      const [tema, setTema] = useState('');
+      const [dificuldade, setDificuldade] = useState('Médio');
+      const [quantidade, setQuantidade] = useState(3);
+      
+      const [questoes, setQuestoes] = useState([]);
+      const [respostasUsuario, setRespostasUsuario] = useState({});
+      const [corrigido, setCorrigido] = useState(false);
+      const [tempoRestante, setTempoRestante] = useState(null);
+      const [linkResolucao, setLinkResolucao] = useState('');
+      const [isAvaliativo, setIsAvaliativo] = useState(false);
+      const [alertasCola, setAlertasCola] = useState(0);
+
+      // PROFESSOR STATES
+      const [teacherTab, setTeacherTab] = useState('resultados');
+      const [resultados, setResultados] = useState([]);
+      const [provasAtivas, setProvasAtivas] = useState([]);
+      const [usuariosList, setUsuariosList] = useState([]);
+      const [gerandoProvaProf, setGerandoProvaProf] = useState(false);
+      const [tipoProvaProf, setTipoProvaProf] = useState('Simulado');
+      const [loadingProfessor, setLoadingProfessor] = useState(false);
+      const [filtroTurma, setFiltroTurma] = useState('');
+      const [filtroPin, setFiltroPin] = useState('');
+
+      const [topicosProva, setTopicosProva] = useState([]);
+      const [prazoProva, setPrazoProva] = useState('');
+      const [temTempo, setTemTempo] = useState(false);
+      const [tempoProvaMinutos, setTempoProvaMinutos] = useState(60);
+      const [temLimiteTentativas, setTemLimiteTentativas] = useState(false);
+      const [limiteTentativas, setLimiteTentativas] = useState(1);
+      const [tituloProva, setTituloProva] = useState('');
+
+      const [modoCriacaoProva, setModoCriacaoProva] = useState('ia');
+      const [importedQuestoes, setImportedQuestoes] = useState([]);
+
+      const [viewingDetails, setViewingDetails] = useState(null);
+      const [showHistoryModal, setShowHistoryModal] = useState(false);
+      const [studentHistory, setStudentHistory] = useState([]);
+      const [showChangePassModal, setShowChangePassModal] = useState(false);
+      const [newPassword, setNewPassword] = useState('');
+
+      useEffect(() => {
+        const initAuth = async () => {
+          try {
+            if (isCanvas && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+          } catch (e) { console.error("Auth falhou:", e); }
+        };
+        initAuth();
+        const unsubscribe = onAuthStateChanged(auth, setFbUser);
+        return () => unsubscribe();
+      }, []);
+
+      useEffect(() => {
+        if (!fbUser || !appUser || appUser.role !== 'professor') return;
+        setLoadingProfessor(true);
+        const unsubRes = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), (snap) => {
+          const docs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setResultados(docs.sort((a, b) => new Date(b.dataCriacao) - new Date(a.dataCriacao)));
+          setLoadingProfessor(false);
+        });
+        
+        const unsubProv = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'provas'), (snap) => {
+          setProvasAtivas(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a,b) => new Date(b.dataCriacao) - new Date(a.dataCriacao)));
+        });
+
+        const unsubUsers = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'usuarios'), (snap) => {
+          setUsuariosList(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(u => u.role === 'aluno'));
+        });
+
+        return () => { unsubRes(); unsubProv(); unsubUsers(); };
+      }, [fbUser, appUser]);
+
+      useEffect(() => { setFrente(''); setTema(''); }, [serie]);
+      useEffect(() => { setTema(''); }, [frente]);
+
+      useEffect(() => {
+        const handleVisibilityChange = () => {
+          if (document.hidden && questoes.length > 0 && !corrigido && isAvaliativo) {
+            setAlertasCola(prev => prev + 1);
+            setAlertMessage({ title: "Segurança", text: "Saída do separador detetada.", type: "warning" });
+          }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }, [questoes, corrigido, isAvaliativo]);
+
+      useEffect(() => {
+        let timerId;
+        if (tempoRestante !== null && tempoRestante > 0 && !corrigido) {
+          timerId = setInterval(() => setTempoRestante(prev => prev - 1), 1000);
+        } else if (tempoRestante === 0 && !corrigido) {
+          handleCorrigir(true);
+        }
+        return () => clearInterval(timerId);
+      }, [tempoRestante, corrigido]);
+
+      const handleAuthAction = async () => {
+        let currentUser = fbUser;
+        if (!currentUser) {
+            setLoading(true);
+            try {
+                const cred = await signInAnonymously(auth);
+                currentUser = cred.user;
+                setFbUser(currentUser);
+            } catch (e) {
+                setLoading(false);
+                setAlertMessage({ title: "Conexão Bloqueada", text: e.message, type: "error" });
+                return;
+            }
+        }
+
+        const userTrim = loginUsername.trim().toLowerCase();
+        const passTrim = loginPassword.trim();
+
+        if (!userTrim || !passTrim) { setAlertMessage({ title: "Erro", text: "Preencha utilizador e palavra-passe.", type: "error" }); return; }
+
+        setLoading(true);
+        try {
+          const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'usuarios', userTrim);
+          const snap = await getDoc(userRef);
+          
+          if (authMode === 'register') {
+            if (snap.exists()) throw new Error("Utilizador já existe.");
+            if (authRole === 'professor' && teacherAccessKey !== CHAVE_MESTRA_PROFESSOR) throw new Error("Chave Mestra inválida.");
+            if (authRole === 'aluno' && (!loginTurma || !loginNome)) throw new Error("Preencha Nome e Turma.");
+            
+            const userData = { username: userTrim, senha: passTrim, role: authRole, nome: loginNome.trim() || userTrim, turma: authRole === 'aluno' ? loginTurma : null, dataCriacao: new Date().toISOString() };
+            await setDoc(userRef, userData);
+            setAppUser(userData);
+          } else {
+            if (!snap.exists()) throw new Error("Utilizador não encontrado.");
+            const data = snap.data();
+            if (data.senha !== passTrim || data.role !== authRole) throw new Error("Credenciais inválidas.");
+            setAppUser(data);
+          }
+        } catch (e) { setAlertMessage({ title: "Erro", text: e.message, type: "error" }); } 
+        finally { setLoading(false); }
+      };
+
+      const handlePasswordUpdate = async () => {
+        if (!newPassword.trim() || !appUser) return;
+        try {
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'usuarios', appUser.username);
+            await updateDoc(userRef, { senha: newPassword });
+            setAppUser({...appUser, senha: newPassword});
+            setShowChangePassModal(false);
+            setAlertMessage({ title: "Sucesso", text: "Palavra-passe alterada!", type: "success" });
+        } catch(e) { setAlertMessage({ title: "Erro", text: "Falha ao gravar.", type: "error" }); }
+      };
+
+      const adicionarTopicoProva = () => {
+          if (!serie || !frente || !tema || quantidade < 1) {
+              setAlertMessage({ title: "Atenção", text: "Preencha todos os campos.", type: "warning" }); return;
+          }
+          setTopicosProva([...topicosProva, { serie, frente, tema, quantidade, dificuldade }]);
+          setTema(''); 
+      };
+
+      const removerTopicoProva = (index) => setTopicosProva(topicosProva.filter((_, i) => i !== index));
+
+      const gerarComIA = async (prompt) => {
+          if (!apiKey || apiKey.trim() === "COLOQUE_A_SUA_CHAVE_AQUI" || apiKey.trim() === "") {
+              throw new Error("A chave da API Gemini está em falta no código (linha 58).");
+          }
+
+          const modelosTentar = isCanvas 
+              ? ["gemini-2.5-flash-preview-09-2025"] 
+              : ["gemini-2.0-flash", "gemini-2.0-flash-lite-preview-02-05", "gemini-1.5-flash"];
+          
+          let detalhesErro = [];
+          let limitZeroDetected = false;
+
+          for (let tentativa = 1; tentativa <= 2; tentativa++) {
+              for (const modelName of modelosTentar) {
+                  try {
+                      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                      });
+                      
+                      const data = await res.json();
+                      
+                      if (res.ok && data.candidates && data.candidates.length > 0) {
+                          let text = data.candidates[0].content.parts[0].text;
+                          text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+                          text = text.replace(/[\n\r\t]/g, ' '); 
+                          return JSON.parse(text); 
+                      } else {
+                          const errorMsg = data.error?.message || 'Sem resposta da IA';
+                          if (errorMsg.includes("limit: 0") || errorMsg.includes("Quota exceeded for metric")) limitZeroDetected = true;
+                          detalhesErro.push(`${modelName}: ${errorMsg.substring(0, 60)}...`);
+                      }
+                  } catch (err) { detalhesErro.push(`${modelName} falhou a ligação.`); }
+              }
+              if (limitZeroDetected) break; 
+              if (tentativa === 1) await new Promise(r => setTimeout(r, 3000));
+          }
+          
+          if (limitZeroDetected) throw new Error("BLOQUEIO DE CONTA GOOGLE (Quota limit: 0). Use uma conta Google diferente para gerar a chave.");
+          const errosUnicos = [...new Set(detalhesErro)].join(" | ");
+          throw new Error("Servidores IA sobrecarregados. Detalhes: " + errosUnicos);
+      };
+
+      const handleGerarProvaProf = async () => {
+        if (topicosProva.length === 0) { setAlertMessage({ title: "Atenção", text: "Adicione conteúdos.", type: "warning" }); return; }
+        if (!tituloProva.trim()) { setAlertMessage({ title: "Atenção", text: "Dê um título para a prova.", type: "warning" }); return; }
+
+        setGerandoProvaProf(true);
+        try {
+          const instrucoesTopicos = topicosProva.map((t) => `- ${t.quantidade} questão(ões) sobre: ${t.serie} | ${t.frente} | ${t.tema}. Dificuldade: ${t.dificuldade}.`).join('\n');
+          const totalQtd = topicosProva.reduce((acc, curr) => acc + curr.quantidade, 0);
+
+          const prompt = `Atue como professor de Física especialista. Crie ${totalQtd} questões inéditas de múltipla escolha. Estilo: Mescla ENEM e Bernoulli. Você deve criar as questões seguindo EXATAMENTE a distribuição abaixo:\n${instrucoesTopicos}\nSaída deve ser EXATAMENTE um array JSON com ${totalQtd} objetos (sem crases Markdown ou texto adicional): [{"enunciado": "...", "alternativas": ["...", "...", "...", "...", "..."], "respostaCorreta": 0, "explicacao": "..."}]`;
+          
+          const q = await gerarComIA(prompt);
+          const pin = Math.random().toString(36).substring(2, 7).toUpperCase();
+          
+          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'provas'), {
+            pin, tema: tituloProva, tipoProva: tipoProvaProf, prazo: prazoProva || null, 
+            temTempo: temTempo, tempoMinutos: temTempo ? tempoProvaMinutos : null, 
+            temLimiteTentativas: temLimiteTentativas, limiteTentativas: temLimiteTentativas ? limiteTentativas : null,
+            detalhesTopicos: JSON.stringify(topicosProva),
+            questoes: JSON.stringify(q), dataCriacao: new Date().toISOString()
+          });
+          
+          setAlertMessage({ title: "Sucesso", text: `PIN gerado: ${pin}`, type: "success" });
+          setTopicosProva([]); setTituloProva(''); setPrazoProva(''); setSerie(''); setFrente(''); setTema('');
+        } catch (e) { 
+            let userMsg = e.message;
+            if (e.name === "SyntaxError") userMsg = "A IA desrespeitou o formato JSON. Tente novamente.";
+            setAlertMessage({ title: "Erro na Geração", text: userMsg, type: "error" }); 
+        } finally { setGerandoProvaProf(false); }
+      };
+
+      const handlePublicarImportada = async () => {
+        if (importedQuestoes.length === 0) { setAlertMessage({ title: "Atenção", text: "Nenhuma questão importada.", type: "warning" }); return; }
+        if (!tituloProva.trim()) { setAlertMessage({ title: "Atenção", text: "Dê um título/nome para a atividade.", type: "warning" }); return; }
+        
+        setGerandoProvaProf(true);
+        try {
+          const pin = Math.random().toString(36).substring(2, 7).toUpperCase();
+          
+          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'provas'), {
+            pin, tema: tituloProva, tipoProva: tipoProvaProf, prazo: prazoProva || null, 
+            temTempo: temTempo, tempoMinutos: temTempo ? tempoProvaMinutos : null, 
+            temLimiteTentativas: temLimiteTentativas, limiteTentativas: temLimiteTentativas ? limiteTentativas : null,
+            detalhesTopicos: "Importação Manual",
+            questoes: JSON.stringify(importedQuestoes), dataCriacao: new Date().toISOString()
+          });
+          
+          setAlertMessage({ title: "Sucesso", text: `Prova Importada com Sucesso! PIN gerado: ${pin}`, type: "success" });
+          setImportedQuestoes([]); setTituloProva(''); setPrazoProva(''); setModoCriacaoProva('ia');
+        } catch (e) {
+          setAlertMessage({ title: "Erro", text: "Falha ao publicar a prova importada.", type: "error" });
+        } finally { setGerandoProvaProf(false); }
+      };
+
+      const handleIniciarProva = async () => {
+        setLoading(true); setQuestoes([]); setRespostasUsuario({}); setCorrigido(false); setAlertasCola(0);
+        try {
+          if (modoEntrada === 'pin') {
+            const pinUpper = pinAluno.trim().toUpperCase();
+            const provSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'provas'));
+            const p = provSnap.docs.map(d=>d.data()).find(x => x.pin === pinUpper);
+            if (!p) throw new Error("Código PIN não encontrado ou inválido.");
+            
+            if (p.prazo && new Date() > new Date(p.prazo)) throw new Error("Prazo encerrado.");
+            
+            if (p.temLimiteTentativas && p.limiteTentativas) {
+                const resSnap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'));
+                const minhasTentativas = resSnap.docs.map(d=>d.data()).filter(r => r.pinProva === pinUpper && r.nomeAluno === appUser.nome);
+                if (minhasTentativas.length >= p.limiteTentativas) throw new Error(`Você já atingiu o limite de ${p.limiteTentativas} tentativa(s).`);
+            }
+            
+            setQuestoes(JSON.parse(p.questoes)); setSerie("Vários Conteúdos"); setTema(p.tema);
+            if (p.temTempo) { setIsAvaliativo(true); setTempoRestante(p.tempoMinutos * 60); } 
+            else { setIsAvaliativo(false); setTempoRestante(null); }
+          } else {
+            if (!serie || !frente || !tema) throw new Error("Selecione os conteúdos primeiro.");
+            const prompt = `Atue como professor de Física especialista. Crie ${quantidade} questões inéditas de múltipla escolha. Série: ${serie} | ${frente} | ${tema}. Dificuldade: ${dificuldade}. Estilo: Mescla ENEM e Bernoulli. Saída deve ser EXATAMENTE um JSON assim (sem crases Markdown): [{"enunciado": "...", "alternativas": ["...", "...", "...", "...", "..."], "respostaCorreta": 0, "explicacao": "..."}]`;
+            const q = await gerarComIA(prompt);
+            setQuestoes(q); setIsAvaliativo(false); setTempoRestante(q.length * 4 * 60);
+          }
+        } catch (e) { 
+            let userMsg = e.message;
+            if (e.name === "SyntaxError") userMsg = "A IA falhou a formatação. Tente de novo.";
+            setAlertMessage({ title: "Atenção", text: userMsg, type: "error" }); 
+        } finally { setLoading(false); }
+      };
+
+      const handleCorrigir = async (forcar = false) => {
+        if (!forcar && Object.keys(respostasUsuario).length < questoes.length) {
+          setAlertMessage({ title: "Atenção", text: "Responda a todas as questões.", type: "warning" }); return;
+        }
+        setCorrigido(true); setTempoRestante(null);
+        let acertos = 0;
+        questoes.forEach((q, i) => { if (respostasUsuario[i] === q.respostaCorreta) acertos++; });
+        
+        if (db && appUser) {
+          try {
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'resultados'), {
+                nomeAluno: appUser.nome, turma: appUser.turma, serie, tema, acertos, total: questoes.length,
+                isAvaliativo, alertasCola, pinProva: modoEntrada === 'pin' ? pinAluno.toUpperCase() : null, dataCriacao: new Date().toISOString(),
+                questoes: JSON.stringify(questoes), respostasUsuario: JSON.stringify(respostasUsuario), linkResolucao: linkResolucao || ""
+            });
+          } catch (err) { console.error("Save error", err); }
+        }
+      };
+
+      const exportarExcel = async () => {
+        try {
+          setLoadingProfessor(true); await loadExcelLibrary();
+          const XLSX = window.XLSX; const wb = XLSX.utils.book_new();
+          const turmas = [...new Set(resultados.map(r => r.turma || 'Sem Turma'))].sort();
+          turmas.forEach(t => {
+            const dados = resultados.filter(r => (r.turma || 'Sem Turma') === t).map(r => ({
+              'Data': new Date(r.dataCriacao).toLocaleDateString(), 'Aluno': r.nomeAluno, 'Série': r.serie,
+              'Atividade': r.pinProva ? `PIN: ${r.pinProva}` : 'IA Livre', 'Capítulo': r.tema, 'Nota': `${r.acertos}/${r.total}`
+            }));
+            const ws = XLSX.utils.json_to_sheet(dados);
+            XLSX.utils.book_append_sheet(wb, ws, t.substring(0, 31));
+          });
+          XLSX.writeFile(wb, "Pauta_Fisica_CNSD.xlsx");
+        } catch (e) { setAlertMessage({ title: "Erro", text: "Falha ao exportar.", type: "error" }); } finally { setLoadingProfessor(false); }
+      };
+
+      const AlertModal = () => (
+        alertMessage && (
+          <div className="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
+            <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl animate-in zoom-in-95">
+              <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center ${alertMessage.type === 'error' ? 'bg-red-100 text-red-600' : alertMessage.type === 'success' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}`}>
+                {alertMessage.type === 'error' ? <XCircle size={32} /> : alertMessage.type === 'success' ? <CheckCircle2 size={32} /> : <AlertCircle size={32} />}
+              </div>
+              <h3 className="text-xl font-bold mb-2 tracking-tight">{alertMessage.title}</h3>
+              <p className="text-slate-600 mb-6 whitespace-pre-wrap text-sm">{alertMessage.text}</p>
+              <button onClick={() => setAlertMessage(null)} className="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-xl font-bold transition-colors">Continuar</button>
+            </div>
+          </div>
+        )
+      );
+
+      if (!appUser) {
+        return (
+          <div className="flex-1 flex flex-col items-center justify-center p-4">
+            <AlertModal />
+            <div className="bg-white/95 backdrop-blur w-full max-w-md rounded-[40px] shadow-2xl overflow-hidden border">
+              <div className="bg-red-700 p-10 text-center text-white relative">
+                <Atom className="w-16 h-16 mx-auto mb-4 text-white/80" />
+                <h1 className="text-3xl font-black uppercase tracking-tight flex flex-col items-center gap-2">
+                  Simulados de Física
+                  <span className="text-red-200 text-lg">CNSD</span>
+                </h1>
+              </div>
+              <div className="p-8">
+                <div className="flex bg-slate-100 p-1.5 rounded-2xl mb-8"><button onClick={() => setAuthRole('aluno')} className={`flex-1 py-3 text-sm font-black rounded-xl ${authRole === 'aluno' ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Aluno</button><button onClick={() => setAuthRole('professor')} className={`flex-1 py-3 text-sm font-black rounded-xl ${authRole === 'professor' ? 'bg-white shadow text-red-700' : 'text-slate-500'}`}>Professor</button></div>
+                <div className="space-y-4">
+                  <input type="text" placeholder="Nome de Utilizador" className="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold focus:border-red-400 transition-colors" value={loginUsername} onChange={(e)=>setLoginUsername(e.target.value)} />
+                  <input type="password" placeholder="Palavra-passe" className="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold focus:border-red-400 transition-colors" value={loginPassword} onChange={(e)=>setLoginPassword(e.target.value)} />
+                  {authMode === 'register' && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                      <input type="text" placeholder="Nome Completo" className="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-red-400 transition-colors" value={loginNome} onChange={(e)=>setLoginNome(e.target.value)} />
+                      {authRole === 'aluno' ? (
+                        <select className="w-full p-4 bg-slate-50 border rounded-2xl font-bold focus:border-red-400 transition-colors" value={loginTurma} onChange={(e)=>setLoginTurma(e.target.value)}><option value="">Escolher turma...</option>{turmasLista.map(t=><option key={t}>{t}</option>)}</select>
+                      ) : (
+                        <div className="bg-red-50 p-4 rounded-2xl border border-red-200"><label className="text-[10px] font-black uppercase text-red-600 mb-2 flex items-center gap-1"><ShieldCheck size={12}/> Chave de Acesso Docente</label><input type="password" placeholder="Chave Mestra" className="w-full p-3 bg-white border border-red-200 rounded-xl outline-none" value={teacherAccessKey} onChange={(e)=>setTeacherAccessKey(e.target.value)} /></div>
+                      )}
+                    </div>
+                  )}
+                  <button onClick={handleAuthAction} disabled={loading} className="w-full py-5 bg-red-700 hover:bg-red-800 transition-colors text-white font-black rounded-2xl flex items-center justify-center gap-2 uppercase tracking-tighter">{loading ? <Loader2 className="animate-spin" /> : (authMode === 'login' ? 'Entrar' : 'Registar Conta')}</button>
+                  <button onClick={() => setAuthMode(authMode==='login'?'register':'login')} className="w-full text-center text-slate-500 text-xs font-black uppercase mt-4 hover:text-red-600 transition-colors">{authMode === 'login' ? 'Novo por aqui? Criar conta' : 'Já tem conta? Iniciar sessão'}</button>
+                </div>
+              </div>
+            </div>
+            <Footer />
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex-1 p-4 md:p-8 flex flex-col items-center">
+          <AlertModal />
+          
+          {provaToDelete && (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-[200] backdrop-blur-sm">
+               <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl animate-in zoom-in-95">
+                   <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600"><Trash2 size={32} /></div>
+                   <h3 className="text-xl font-bold mb-2 text-slate-800">Excluir Atividade</h3>
+                   <p className="mb-6 text-slate-600">Deseja excluir o PIN <strong className="text-slate-900">{provaToDelete.pin}</strong>?</p>
+                   <div className="flex gap-4">
+                       <button onClick={()=>setProvaToDelete(null)} className="flex-1 p-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-colors">Cancelar</button>
+                       <button onClick={async ()=>{
+                           try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'provas', provaToDelete.id)); setAlertMessage({ title: "Sucesso", text: "Atividade excluída.", type: "success" }); } 
+                           catch (e) { setAlertMessage({ title: "Erro", text: "Falha ao excluir.", type: "error" }); } 
+                           finally { setProvaToDelete(null); }
+                       }} className="flex-1 p-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors">Excluir</button>
+                   </div>
+               </div>
+            </div>
+          )}
+
+          {userToDelete && (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-[200] backdrop-blur-sm">
+               <div className="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl animate-in zoom-in-95">
+                   <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600"><Trash2 size={32} /></div>
+                   <h3 className="text-xl font-bold mb-2 text-slate-800">Excluir Conta</h3>
+                   <p className="mb-6 text-slate-600">Deseja excluir o aluno <strong className="text-slate-900">{userToDelete.nome}</strong>?</p>
+                   <div className="flex gap-4">
+                       <button onClick={()=>setUserToDelete(null)} className="flex-1 p-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-colors">Cancelar</button>
+                       <button onClick={async ()=>{
+                           try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'usuarios', userToDelete.id)); setAlertMessage({ title: "Sucesso", text: "Conta excluída.", type: "success" }); } 
+                           catch (e) { setAlertMessage({ title: "Erro", text: "Falha ao excluir.", type: "error" }); } 
+                           finally { setUserToDelete(null); }
+                       }} className="flex-1 p-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors">Excluir</button>
+                   </div>
+               </div>
+            </div>
+          )}
+
+          <div className="max-w-6xl w-full mx-auto space-y-6 flex-1">
+            <header className="bg-red-700 text-white rounded-[40px] p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-2xl"><Atom className="w-8 h-8 text-white" /></div>
+                <div>
+                  <h1 className="text-2xl font-black uppercase flex items-center gap-3">SIMULADOS DE FÍSICA - CNSD</h1>
+                  <p className="text-red-200 font-black text-xs uppercase">{appUser.role === 'professor' ? 'Painel Docente' : `Olá, ${appUser.nome}`}</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                {appUser.role === 'aluno' && <button onClick={() => setShowHistoryModal(true)} className="p-3 bg-red-800 hover:bg-red-900 rounded-2xl transition-colors"><History size={20}/></button>}
+                <button onClick={() => setShowChangePassModal(true)} className="p-3 bg-red-800 hover:bg-red-900 rounded-2xl transition-colors"><Key size={20}/></button>
+                <button onClick={() => { setAppUser(null); setQuestoes([]); }} className="flex items-center gap-2 bg-black/10 text-white hover:bg-black/20 px-6 py-3 rounded-2xl font-black uppercase text-xs transition-colors"><LogOut size={16}/> Sair</button>
+              </div>
+            </header>
+
+            {appUser.role === 'professor' ? (
+              <div className="bg-white/95 backdrop-blur rounded-[40px] shadow-xl overflow-hidden border">
+                <div className="flex border-b border-slate-100 bg-slate-50/50 flex-col sm:flex-row">
+                  <button onClick={()=>setTeacherTab('resultados')} className={`flex-1 p-6 font-black text-xs uppercase transition-colors ${teacherTab==='resultados' ? 'bg-white text-red-700 border-b-4 border-red-700' : 'text-slate-400 hover:text-slate-600'}`}>Resultados</button>
+                  <button onClick={()=>setTeacherTab('provas')} className={`flex-1 p-6 font-black text-xs uppercase transition-colors ${teacherTab==='provas' ? 'bg-white text-red-700 border-b-4 border-red-700' : 'text-slate-400 hover:text-slate-600'}`}>Gestão de Provas</button>
+                  <button onClick={()=>setTeacherTab('contas')} className={`flex-1 p-6 font-black text-xs uppercase transition-colors ${teacherTab==='contas' ? 'bg-white text-red-700 border-b-4 border-red-700' : 'text-slate-400 hover:text-slate-600'}`}>Gerir Alunos</button>
+                </div>
+
+                {teacherTab === 'resultados' ? (
+                  <div className="p-6 md:p-10">
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                      <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3">Pauta Docente</h2>
+                      <button onClick={exportarExcel} disabled={loadingProfessor || resultados.length === 0} className="w-full md:w-auto flex items-center justify-center gap-3 bg-emerald-600 hover:bg-emerald-700 transition-colors text-white px-8 py-4 rounded-[20px] font-black shadow-lg text-xs uppercase"><FileSpreadsheet size={18} /> Exportar Planilha</button>
+                    </div>
+
+                    <div className="bg-slate-50 p-6 rounded-[32px] border mb-8 space-y-6">
+                      <div className="flex items-center gap-2 font-black text-slate-600 uppercase text-xs"><Filter size={16}/> Filtros</div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select className="p-4 rounded-2xl border font-bold text-slate-700" value={filtroTurma} onChange={(e)=>setFiltroTurma(e.target.value)}><option value="">Todas as Turmas</option>{turmasLista.map(t => <option key={t} value={t}>{t}</option>)}</select>
+                        <select className="p-4 rounded-2xl border font-bold text-slate-700" value={filtroPin} onChange={(e)=>setFiltroPin(e.target.value)}><option value="">Todas as Atividades</option><option value="IA">Apenas Estudo Livre</option>{provasAtivas.map(p => <option key={p.pin} value={p.pin}>PIN: {p.pin} - {p.tema.substring(0,20)}...</option>)}</select>
+                      </div>
+                    </div>
+
+                    {(() => {
+                      const resFiltrados = resultados.filter(r => {
+                        const mTurma = filtroTurma ? r.turma === filtroTurma : true;
+                        const mPin = filtroPin === 'IA' ? !r.pinProva : filtroPin ? r.pinProva === filtroPin : true;
+                        return mTurma && mPin;
+                      });
+                      const totalSubs = resFiltrados.length;
+                      const avgScore = totalSubs > 0 ? (resFiltrados.reduce((acc, r) => acc + (r.acertos/r.total)*100, 0) / totalSubs).toFixed(1) : 0;
+                      return (
+                        <>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div className="bg-sky-50 p-6 rounded-3xl border border-sky-100"><h4 className="text-sky-600 font-black text-xs uppercase mb-2">Entregas Totais</h4><span className="text-4xl font-black text-sky-900">{totalSubs}</span></div>
+                            <div className="bg-emerald-50 p-6 rounded-3xl border border-emerald-100"><h4 className="text-emerald-600 font-black text-xs uppercase mb-2">Aproveitamento Médio</h4><span className="text-4xl font-black text-emerald-900">{avgScore}%</span></div>
+                            <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100"><h4 className="text-amber-600 font-black text-xs uppercase mb-2">Alunos Ativos</h4><span className="text-4xl font-black text-amber-900">{new Set(resFiltrados.map(r=>r.nomeAluno)).size}</span></div>
+                          </div>
+
+                          {loadingProfessor ? <div className="flex justify-center py-20"><Loader2 className="animate-spin text-red-600 w-12 h-12" /></div> : (
+                            <div className="overflow-x-auto rounded-3xl border">
+                              <table className="w-full text-left text-sm whitespace-nowrap">
+                                <thead className="bg-slate-50 text-slate-500 font-black uppercase text-[10px] border-b"><tr><th className="p-5">Aluno / Turma</th><th className="p-5">Atividade</th><th className="p-5 text-center">Nota</th><th className="p-5">Data</th><th className="p-5"></th></tr></thead>
+                                <tbody className="divide-y bg-white">
+                                  {resFiltrados.map(r => (
+                                    <tr key={r.id} className="hover:bg-slate-50"><td className="p-5 font-black"><div>{r.nomeAluno}</div><div className="text-[10px] text-red-600 uppercase">{r.turma}</div></td><td className="p-5 font-bold"><div className="text-[10px] text-slate-400 uppercase">{r.pinProva ? `PIN: ${r.pinProva}` : 'IA Livre'}</div><div className="text-slate-800">{r.tema}</div></td><td className="p-5 text-center font-black text-lg">{r.acertos}/{r.total}</td><td className="p-5 text-slate-400 text-xs font-bold">{new Date(r.dataCriacao).toLocaleDateString()}</td><td className="p-5 text-right"><button onClick={()=>setViewingDetails(r)} className="p-3 bg-slate-100 hover:bg-red-700 hover:text-white rounded-xl transition-colors"><Eye size={18}/></button></td></tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                ) : teacherTab === 'contas' ? (
+                  <div className="p-6 md:p-10 animate-in fade-in space-y-6">
+                    <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3"><Users className="text-red-600"/> Gerenciador de Contas</h2>
+                    <div className="overflow-x-auto rounded-3xl border bg-white">
+                      <table className="w-full text-left text-sm whitespace-nowrap">
+                        <thead className="bg-slate-50 text-slate-500 font-black uppercase text-[10px] border-b"><tr><th className="p-5">Utilizador</th><th className="p-5">Nome Completo</th><th className="p-5">Turma</th><th className="p-5">Registo</th><th className="p-5 text-right">Ação</th></tr></thead>
+                        <tbody className="divide-y">
+                          {usuariosList.map(u => (
+                            <tr key={u.id} className="hover:bg-slate-50"><td className="p-5 font-bold text-slate-900">{u.username}</td><td className="p-5 font-bold">{u.nome}</td><td className="p-5 font-black text-red-600 text-xs uppercase">{u.turma || "S/ Turma"}</td><td className="p-5 text-slate-400 text-xs font-bold">{new Date(u.dataCriacao).toLocaleDateString()}</td><td className="p-5 text-right"><button onClick={() => setUserToDelete(u)} className="p-3 bg-slate-100 hover:bg-red-600 hover:text-white rounded-xl transition-colors"><Trash2 size={18}/></button></td></tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-6 md:p-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div className="lg:col-span-1 bg-slate-50/80 p-8 rounded-[32px] border space-y-6">
+                      <h3 className="font-black text-slate-800 uppercase text-xs flex items-center gap-2"><KeyRound size={16} className="text-red-600"/> Lançar Novo PIN</h3>
+                      
+                      <div className="flex bg-slate-200 p-1 rounded-xl">
+                          <button onClick={()=>setModoCriacaoProva('ia')} className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${modoCriacaoProva==='ia' ? 'bg-white shadow text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Gerar com IA</button>
+                          <button onClick={()=>setModoCriacaoProva('importacao')} className={`flex-1 py-2 text-[10px] font-black uppercase rounded-lg transition-all ${modoCriacaoProva==='importacao' ? 'bg-white shadow text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}>Importar Ficheiro</button>
+                      </div>
+
+                      <div className="space-y-4">
+                        <input type="text" placeholder="Título da Atividade" className="w-full p-4 rounded-2xl border font-bold outline-none focus:border-red-400 transition-colors" value={tituloProva} onChange={(e)=>setTituloProva(e.target.value)} />
+                        
+                        <div className="flex flex-col gap-3 p-4 bg-white rounded-2xl border">
+                            <label className="text-[10px] font-black uppercase text-slate-400">Prazo Máximo (Opcional)</label>
+                            <input type="datetime-local" className="w-full p-3 rounded-xl border bg-slate-50 font-bold text-sm outline-none focus:border-red-400 transition-colors" value={prazoProva} onChange={(e)=>setPrazoProva(e.target.value)} />
+                            
+                            <label className="flex items-center gap-3 text-sm font-bold text-slate-700 mt-2 cursor-pointer"><input type="checkbox" className="w-5 h-5 rounded text-red-600 accent-red-600" checked={temTempo} onChange={(e)=>setTemTempo(e.target.checked)} /> Ativar Tempo Limite</label>
+                            {temTempo && (<div className="flex items-center gap-3 mt-1 animate-in fade-in slide-in-from-top-2"><input type="number" className="w-24 p-3 rounded-xl border text-center font-black text-red-700 focus:border-red-400 transition-colors" value={tempoProvaMinutos} onChange={(e)=>setTempoProvaMinutos(parseInt(e.target.value)||1)} /><span className="text-xs font-black uppercase text-slate-400">Minutos<br/>Totais</span></div>)}
+                            
+                            <hr className="my-2 border-slate-100" />
+                            
+                            <label className="flex items-center gap-3 text-sm font-bold text-slate-700 cursor-pointer"><input type="checkbox" className="w-5 h-5 rounded text-red-600 accent-red-600" checked={temLimiteTentativas} onChange={(e)=>setTemLimiteTentativas(e.target.checked)} /> Limitar Tentativas</label>
+                            {temLimiteTentativas && (<div className="flex items-center gap-3 mt-1 animate-in fade-in slide-in-from-top-2"><input type="number" className="w-24 p-3 rounded-xl border text-center font-black text-red-700 focus:border-red-400 transition-colors" value={limiteTentativas} onChange={(e)=>setLimiteTentativas(parseInt(e.target.value)||1)} min="1"/><span className="text-xs font-black uppercase text-slate-400">Máximas</span></div>)}
+                        </div>
+
+                        {modoCriacaoProva === 'ia' ? (
+                          <>
+                            <div className="p-4 bg-red-50 rounded-2xl border border-red-100 space-y-3">
+                                <h4 className="text-[10px] font-black uppercase text-red-800 mb-2 flex justify-between">Construir Conteúdo <span className="bg-red-200 px-2 rounded-full">{topicosProva.length}</span></h4>
+                                <select className="w-full p-3 rounded-xl border font-bold text-sm" value={serie} onChange={(e)=>setSerie(e.target.value)}><option value="">Série...</option><option>1ª Série</option><option>2ª Série</option><option>3ª Série</option></select>
+                                <select className="w-full p-3 rounded-xl border font-bold text-sm" value={frente} onChange={(e)=>setFrente(e.target.value)} disabled={!serie || !curriculoFisica[serie]}><option value="">Frente...</option>{serie && curriculoFisica[serie] && Object.keys(curriculoFisica[serie]).map(f=><option key={f}>{f}</option>)}</select>
+                                <select className="w-full p-3 rounded-xl border font-bold text-sm" value={tema} onChange={(e)=>setTema(e.target.value)} disabled={!frente || !curriculoFisica[serie]}><option value="">Capítulo...</option>{frente && serie && curriculoFisica[serie] && curriculoFisica[serie][frente] && curriculoFisica[serie][frente].map(t=><option key={t}>{t}</option>)}</select>
+                                <div className="flex gap-2"><input type="number" className="w-20 p-3 rounded-xl border font-bold text-sm text-center" placeholder="Qtd" value={quantidade} onChange={(e)=>setQuantidade(parseInt(e.target.value)||1)} min="1" max="20"/><select className="flex-1 p-3 rounded-xl border font-bold text-sm" value={dificuldade} onChange={(e)=>setDificuldade(e.target.value)}><option>Fácil</option><option>Médio</option><option>Difícil</option></select></div>
+                                <button onClick={adicionarTopicoProva} className="w-full py-3 bg-white text-red-700 hover:bg-red-100 border border-red-200 font-black rounded-xl text-xs uppercase mt-2 transition-colors">+ Adicionar à Prova</button>
+                            </div>
+
+                            {topicosProva.length > 0 && (
+                                <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                                    {topicosProva.map((t, idx) => (
+                                        <div key={idx} className="flex items-center justify-between p-3 bg-white border rounded-xl text-xs"><div className="flex-1 pr-2"><div className="font-bold text-slate-800 line-clamp-1">{t.tema}</div><div className="text-slate-500 font-black uppercase text-[9px]">{t.quantidade} Questões • {t.dificuldade}</div></div><button onClick={()=>removerTopicoProva(idx)} className="p-2 text-slate-300 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><X size={16}/></button></div>
+                                    ))}
+                                </div>
+                            )}
+                            <button onClick={handleGerarProvaProf} disabled={gerandoProvaProf || topicosProva.length === 0} className="w-full py-5 bg-red-700 hover:bg-red-800 transition-colors text-white font-black rounded-2xl shadow-lg flex justify-center gap-2 uppercase text-xs disabled:opacity-50 mt-4">{gerandoProvaProf ? <Loader2 className="animate-spin" /> : 'Publicar com PIN'}</button>
+                          </>
+                        ) : (
+                          <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 space-y-3">
+                              <h4 className="text-[10px] font-black uppercase text-indigo-800 mb-2">Importar Ficheiro (.JSON)</h4>
+                              <input type="file" accept=".json" className="w-full text-xs font-bold text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer transition-colors" onChange={(e) => {
+                                  const file = e.target.files[0];
+                                  if (!file) return;
+                                  const reader = new FileReader();
+                                  reader.onload = (event) => {
+                                      try {
+                                          const parsed = JSON.parse(event.target.result);
+                                          if (!Array.isArray(parsed) || !parsed[0].enunciado || !parsed[0].alternativas) throw new Error();
+                                          setImportedQuestoes(parsed);
+                                          setAlertMessage({ title: "Sucesso", text: `${parsed.length} questões carregadas com sucesso!`, type: "success" });
+                                      } catch (err) {
+                                          setAlertMessage({ title: "Erro de Formato", text: "O ficheiro fornecido não é válido. Verifique o modelo.", type: "error" });
+                                          setImportedQuestoes([]);
+                                      }
+                                  };
+                                  reader.readAsText(file);
+                              }}/>
+                              {importedQuestoes.length > 0 && <div className="p-3 bg-indigo-100 text-indigo-800 rounded-xl text-xs font-black text-center">{importedQuestoes.length} questões prontas!</div>}
+                              
+                              <button onClick={handlePublicarImportada} disabled={gerandoProvaProf || importedQuestoes.length === 0} className="w-full py-5 bg-red-700 hover:bg-red-800 transition-colors text-white font-black rounded-2xl shadow-lg flex justify-center gap-2 uppercase text-xs disabled:opacity-50 mt-4">{gerandoProvaProf ? <Loader2 className="animate-spin" /> : 'Publicar Prova Importada'}</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="lg:col-span-2 space-y-6">
+                      <h3 className="font-black text-slate-800 uppercase text-xs flex items-center gap-2"><Layers size={16} className="text-red-600"/> Atividades Ativas</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {provasAtivas.map(p => {
+                          const taExpirado = p.prazo && new Date() > new Date(p.prazo);
+                          return (
+                            <div key={p.id} className="bg-white/95 backdrop-blur border-2 p-6 rounded-[32px] border-slate-100 flex flex-col relative group hover:border-red-200 transition-colors shadow-sm">
+                              <button onClick={() => setProvaToDelete(p)} className="absolute top-6 right-6 p-2 bg-slate-50 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl md:opacity-0 group-hover:opacity-100 transition-all"><Trash2 size={18} /></button>
+                              <div className="flex justify-between items-start mb-3 pr-10">
+                                  <span className="text-3xl font-black text-slate-800 font-mono tracking-tighter">{p.pin}</span>
+                                  <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase border ${taExpirado ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>{taExpirado ? 'Encerrado' : 'Aberto'}</span>
+                              </div>
+                              <div className="font-black text-slate-600 text-sm mb-2 flex-1">{p.tema}</div>
+                              <div className="flex gap-4 mt-auto mb-4 border-t pt-3 flex-wrap">
+                                  {p.prazo && (<div className="space-y-1"><div className="text-[9px] font-black text-slate-400 uppercase">Entrega</div><div className="text-xs font-bold text-slate-700">{new Date(p.prazo).toLocaleString('pt-PT').slice(0, 17)}</div></div>)}
+                                  <div className="space-y-1"><div className="text-[9px] font-black text-slate-400 uppercase">Limite</div><div className={`text-xs font-bold ${p.temTempo ? 'text-red-600' : 'text-slate-500'}`}>{p.temTempo ? `${p.tempoMinutos} Minutos` : 'Livre'}</div></div>
+                                  <div className="space-y-1"><div className="text-[9px] font-black text-slate-400 uppercase">Tentativas</div><div className={`text-xs font-bold ${p.temLimiteTentativas ? 'text-red-600' : 'text-slate-500'}`}>{p.temLimiteTentativas ? `${p.limiteTentativas} Máx` : 'Ilimitado'}</div></div>
+                              </div>
+                              <button onClick={() => setViewingDetails({isGargalo:true, prova: p, entregas: resultados.filter(r=>r.pinProva === p.pin)})} className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl font-black text-[10px] uppercase transition-colors">Analisar Gargalos da Turma</button>
+                            </div>
+                          );
+                        })}
+                        {provasAtivas.length === 0 && <div className="md:col-span-2 p-12 text-center border-4 border-dashed rounded-[32px] border-slate-200 text-slate-400 font-bold uppercase text-xs bg-white/50">Nenhuma atividade ativa.</div>}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {!questoes.length && !loading && (
+                  <div className="bg-white/95 backdrop-blur rounded-[40px] p-8 md:p-12 shadow-2xl border border-slate-200">
+                    <div className="flex bg-slate-100 p-1.5 rounded-[22px] mb-12 w-full md:w-fit mx-auto md:mx-0">
+                      <button onClick={()=>setModoEntrada('ia')} className={`flex-1 md:w-56 py-4 text-xs font-black uppercase rounded-[18px] transition-all ${modoEntrada==='ia' ? 'bg-white shadow-xl text-red-700' : 'text-slate-400 hover:text-slate-600'}`}>Estudo Livre IA</button>
+                      <button onClick={()=>setModoEntrada('pin')} className={`flex-1 md:w-56 py-4 text-xs font-black uppercase rounded-[18px] transition-all ${modoEntrada==='pin' ? 'bg-white shadow-xl text-sky-700' : 'text-slate-400 hover:text-slate-600'}`}>Simulado com PIN</button>
+                    </div>
+
+                    {modoEntrada === 'pin' ? (
+                      <div className="max-w-md mx-auto text-center space-y-8 py-10 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="w-20 h-20 bg-sky-50 rounded-full flex items-center justify-center mx-auto text-sky-500 shadow-inner"><KeyRound size={40} /></div>
+                        <div className="space-y-2"><h2 className="text-2xl font-black text-slate-800">Inserir Código da Prova</h2><p className="text-slate-400 text-xs font-bold uppercase">Fornecido pelo professor</p></div>
+                        <input type="text" placeholder="EX: A7X9Z" className="w-full p-8 rounded-[30px] border-4 text-center text-5xl font-mono font-black uppercase outline-none focus:border-red-400 bg-slate-50 transition-colors" value={pinAluno} onChange={(e)=>setPinAluno(e.target.value.toUpperCase())} maxLength={5} />
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="space-y-2"><label className="text-[10px] font-black uppercase text-slate-400 ml-3">Série</label><select className="w-full p-5 rounded-3xl border-2 font-black bg-slate-50 outline-none focus:border-red-400 transition-colors" value={serie} onChange={(e)=>setSerie(e.target.value)}><option value="">Escolher...</option>{getAllowedSeries(appUser.turma).map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+                        <div className="space-y-2"><label className="text-[10px] font-black uppercase text-slate-400 ml-3">Frente</label><select className="w-full p-5 rounded-3xl border-2 font-black bg-slate-50 outline-none focus:border-red-400 transition-colors disabled:opacity-50" value={frente} onChange={(e)=>setFrente(e.target.value)} disabled={!serie || !curriculoFisica[serie]}><option value="">...</option>{serie && curriculoFisica[serie] && Object.keys(curriculoFisica[serie]).map(f=><option key={f}>{f}</option>)}</select></div>
+                        <div className="space-y-2 md:col-span-2 lg:col-span-1"><label className="text-[10px] font-black uppercase text-slate-400 ml-3">Capítulo / Tema</label><select className="w-full p-5 rounded-3xl border-2 font-black bg-slate-50 outline-none focus:border-red-400 transition-colors disabled:opacity-50" value={tema} onChange={(e)=>setTema(e.target.value)} disabled={!frente || !curriculoFisica[serie]}><option value="">...</option>{frente && serie && curriculoFisica[serie] && curriculoFisica[serie][frente] && curriculoFisica[serie][frente].map(t=><option key={t}>{t}</option>)}</select></div>
+                        <div className="flex gap-6 md:col-span-2 lg:col-span-3 pt-10 border-t"><div className="flex-1 space-y-2"><label className="text-[10px] font-black uppercase text-slate-400 ml-3">Qtd. Questões</label><input type="number" className="w-full p-5 rounded-3xl border-2 font-black bg-slate-50 outline-none focus:border-red-400 transition-colors" value={quantidade} onChange={(e)=>setQuantidade(parseInt(e.target.value)||1)} min="1" max="10"/></div><div className="flex-1 space-y-2"><label className="text-[10px] font-black uppercase text-slate-400 ml-3">Dificuldade</label><select className="w-full p-5 rounded-3xl border-2 font-black bg-slate-50 outline-none focus:border-red-400 transition-colors" value={dificuldade} onChange={(e)=>setDificuldade(e.target.value)}><option>Fácil</option><option>Médio</option><option>Difícil</option></select></div></div>
+                      </div>
+                    )}
+                    <button onClick={handleIniciarProva} className={`w-full mt-12 py-6 text-white font-black text-xl rounded-[30px] shadow-2xl uppercase border-b-8 active:border-b-0 transition-all ${modoEntrada === 'pin' ? 'bg-sky-600 border-sky-800 hover:bg-sky-500' : 'bg-red-700 border-red-900 hover:bg-red-600'}`}>{modoEntrada === 'pin' ? 'Acessar Prova PIN' : 'Iniciar Estudo Gerado'}</button>
+                  </div>
+                )}
+
+                {loading && (<div className="bg-white/95 backdrop-blur rounded-[40px] p-24 text-center border"><Loader2 className="w-20 h-20 animate-spin text-red-600 mb-8 mx-auto" /><h3 className="text-3xl font-black text-slate-800 uppercase">A Preparar...</h3></div>)}
+
+                {questoes.length > 0 && !loading && (
+                  <div className="space-y-6 pb-24 animate-in fade-in">
+                    <div className="sticky top-4 z-40 bg-white/95 backdrop-blur-xl p-6 rounded-[32px] shadow-2xl border flex justify-between items-center">
+                        <div className="flex items-center gap-4"><div className="bg-red-600 text-white p-3 rounded-2xl"><Clock size={24}/></div><div className="text-2xl font-black font-mono text-slate-800">{tempoRestante !== null ? formatarTempo(tempoRestante) : (isAvaliativo ? '--:--' : 'Livre')}</div></div>
+                        {corrigido && <div className="text-3xl font-black text-emerald-700 bg-emerald-50 px-6 py-2 rounded-2xl border border-emerald-100">NOTA: {questoes.filter((q,i)=>respostasUsuario[i]===q.respostaCorreta).length}/{questoes.length}</div>}
+                        <button onClick={() => { setQuestoes([]); setSerie(''); setFrente(''); setTema(''); }} className="p-3 bg-slate-100 hover:bg-slate-200 rounded-2xl transition-colors"><RotateCcw/></button>
+                    </div>
+
+                    {questoes.map((q, qIndex) => (
+                      <div key={qIndex} className="bg-white/95 backdrop-blur rounded-[40px] p-8 md:p-12 shadow-xl border relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-3 h-full bg-red-700"></div>
+                        <div className="flex gap-8 items-start mb-10"><span className="bg-red-700 text-white font-black text-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shrink-0 border-b-4 border-red-900">{qIndex + 1}</span><p className="text-slate-800 text-2xl font-bold leading-snug">{q.enunciado}</p></div>
+                        <div className="space-y-4 md:pl-24">
+                          {q.alternativas.map((alt, aIndex) => {
+                            const isSelected = respostasUsuario[qIndex] === aIndex;
+                            const isCorrect = q.respostaCorreta === aIndex;
+                            let btnClass = "w-full text-left p-6 rounded-[28px] border-4 flex gap-6 transition-all " + (!corrigido ? (isSelected ? "bg-red-50 border-red-400 text-red-900 shadow-lg" : "bg-white border-slate-100 hover:bg-slate-50 hover:border-slate-300") : (isCorrect ? "bg-emerald-50 border-emerald-500 font-black text-emerald-900" : isSelected ? "bg-rose-50 border-rose-300 text-rose-700" : "opacity-30 border-slate-100"));
+                            return <button key={aIndex} disabled={corrigido} onClick={()=>setRespostasUsuario({...respostasUsuario, [qIndex]: aIndex})} className={btnClass}><span className="font-black text-slate-300">{(['A','B','C','D','E'])[aIndex]})</span> <span className="flex-1 font-bold text-lg">{alt}</span></button>;
+                          })}
+                        </div>
+                        {corrigido && (<div className="mt-12 md:ml-24 bg-slate-50 p-8 rounded-[32px] border-2 border-slate-100"><div className="flex items-center gap-2 mb-4 text-slate-600 font-black uppercase text-[10px]"><Atom size={16}/> Resolução (IA)</div><p className="text-slate-700 font-bold text-lg italic">"{q.explicacao}"</p></div>)}
+                      </div>
+                    ))}
+
+                    {!corrigido && (
+                      <div className="bg-red-700 p-10 md:p-14 rounded-[50px] shadow-2xl space-y-10 border-t-8 border-red-500">
+                        <div className="space-y-3"><label className="text-white font-black uppercase text-[10px] ml-4 opacity-60">Anexar Link da Foto do Rascunho (Opcional)</label><input type="url" placeholder="https://..." className="w-full p-6 bg-white/5 border-2 border-white/10 rounded-3xl text-white outline-none font-bold focus:border-red-400 transition-colors" value={linkResolucao} onChange={(e)=>setLinkResolucao(e.target.value)}/></div>
+                        <button onClick={()=>handleCorrigir(false)} className="w-full py-8 bg-emerald-500 hover:bg-emerald-400 transition-colors text-slate-900 font-black text-3xl rounded-[35px] shadow-2xl uppercase">Finalizar Prova</button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+            <Footer />
+          </div>
+
+          {showChangePassModal && (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm"><div className="bg-white rounded-[40px] p-10 w-full max-w-sm text-center shadow-2xl animate-in zoom-in-95"><div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6"><Key size={30} className="text-slate-800"/></div><h3 className="text-2xl font-black mb-6">Mudar Minha Senha</h3><input type="password" placeholder="Nova senha" value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} className="w-full p-5 border-2 rounded-2xl mb-6 text-center font-bold outline-none focus:border-red-400" /><div className="flex gap-3"><button onClick={()=>setShowChangePassModal(false)} className="flex-1 p-4 bg-slate-100 hover:bg-slate-200 transition-colors rounded-2xl font-black uppercase text-[10px]">Cancelar</button><button onClick={handlePasswordUpdate} className="flex-1 p-4 bg-red-700 hover:bg-red-800 transition-colors text-white rounded-2xl font-black uppercase text-[10px]">Salvar</button></div></div></div>
+          )}
+
+          {showHistoryModal && (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm"><div className="bg-white rounded-[40px] p-8 md:p-12 w-full max-w-2xl shadow-2xl relative my-8 animate-in zoom-in-95"><button onClick={()=>setShowHistoryModal(false)} className="absolute top-8 right-8 p-3 bg-slate-100 hover:bg-slate-200 transition-colors rounded-2xl"><X /></button><h3 className="text-3xl font-black mb-8 flex items-center gap-4"><History className="text-red-600" size={32}/> MEU HISTÓRICO</h3><div className="max-h-[500px] overflow-y-auto space-y-4 pr-2">{studentHistory.length === 0 ? (<div className="p-20 text-center border-4 border-dashed rounded-[40px] border-slate-200 text-slate-400 font-black uppercase text-xs">Sem atividades.</div>) : ( studentHistory.map(h => (<div key={h.id} className="p-6 bg-slate-50 rounded-3xl border flex justify-between items-center hover:border-slate-300 transition-colors"><div><div className="font-black text-slate-500 uppercase text-xs mb-1">{h.tema}</div><div className="text-2xl font-black text-slate-800 font-mono">{h.acertos}/{h.total}</div></div><button onClick={()=>setViewingDetails(h)} className="p-4 bg-white shadow hover:shadow-md transition-shadow rounded-2xl text-red-600"><Eye /></button></div>)) )}</div>{!studentHistory.length && (<button onClick={async ()=>{ const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'resultados')); setStudentHistory(snap.docs.map(d=>({id:d.id, ...d.data()})).filter(d=>d.nomeAluno.toLowerCase() === appUser.nome.toLowerCase())); }} className="w-full mt-8 py-6 bg-red-700 hover:bg-red-800 transition-colors text-white rounded-[24px] font-black uppercase text-xs">Sincronizar Dados</button>)}</div></div>
+          )}
+
+          {viewingDetails && (
+            <div className="fixed inset-0 bg-slate-900/95 flex items-start justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm"><div className="bg-white rounded-[50px] p-8 md:p-14 w-full max-w-5xl shadow-2xl relative my-12 animate-in slide-in-from-bottom-8"><div className="flex justify-between items-center mb-10 pb-6 border-b"><button onClick={()=>setViewingDetails(null)} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors font-black uppercase text-sm"><ChevronLeft size={20}/> Voltar</button><button onClick={()=>setViewingDetails(null)} className="p-4 bg-slate-100 hover:bg-slate-200 transition-colors rounded-3xl"><X size={28}/></button></div>{viewingDetails.isGargalo ? (<div className="space-y-12"><h3 className="text-4xl font-black text-slate-900">Gargalos: {viewingDetails.prova.pin}</h3><div className="grid grid-cols-1 gap-14">{JSON.parse(viewingDetails.prova.questoes).map((q, idx) => { const respStats = [0,0,0,0,0]; viewingDetails.entregas.forEach(ent => { const resps = JSON.parse(ent.respostasUsuario); if (resps[idx] !== undefined) respStats[resps[idx]]++; }); return (<div key={idx} className="space-y-8 bg-slate-50/50 p-8 rounded-[40px] border"><p className="font-black text-slate-800 text-xl">Q{idx+1}: {q.enunciado.substring(0, 150)}...</p><div className="grid grid-cols-1 sm:grid-cols-5 gap-4">{q.alternativas.map((alt, aIdx) => { const isC = q.respostaCorreta === aIdx; const perc = viewingDetails.entregas.length ? Math.round((respStats[aIdx]/viewingDetails.entregas.length)*100) : 0; return (<div key={aIdx} className={`p-6 rounded-3xl border-4 flex flex-col justify-between h-32 ${isC ? 'bg-emerald-100 border-emerald-500' : 'bg-white border-slate-200'}`}><div className="text-3xl font-black font-mono">{perc}%</div><div className="text-[10px] font-black uppercase text-slate-400">Opção {(['A','B','C','D','E'])[aIdx]}</div></div>); })}</div></div>); })}</div></div>) : (<div className="space-y-12"><div className="border-b-4 pb-10"><h3 className="text-5xl font-black text-slate-900">{viewingDetails.nomeAluno}</h3><div className="flex flex-wrap gap-4 mt-8"><span className="bg-red-700 text-white px-8 py-3 rounded-2xl font-black text-xl">{viewingDetails.acertos}/{viewingDetails.total}</span><span className="bg-slate-100 text-slate-500 px-6 py-3 rounded-2xl font-black uppercase text-xs border">{viewingDetails.turma}</span>{viewingDetails.linkResolucao && <a href={viewingDetails.linkResolucao} target="_blank" rel="noreferrer" className="bg-red-50 text-red-700 hover:bg-red-100 transition-colors px-6 py-3 rounded-2xl font-black uppercase text-xs border border-red-200">Ver Link de Resolução</a>}</div></div><div className="space-y-10">{JSON.parse(viewingDetails.questoes).map((q, idx) => { const r = JSON.parse(viewingDetails.respostasUsuario)[idx]; return (<div key={idx} className="space-y-6"><p className="font-black text-2xl text-slate-800">{idx+1}. {q.enunciado}</p><div className="grid grid-cols-1 gap-3">{q.alternativas.map((alt, aIdx) => (<div key={aIdx} className={`p-6 rounded-[28px] text-lg border-4 ${q.respostaCorreta === aIdx ? 'bg-emerald-50 border-emerald-500 text-emerald-800 font-black' : r === aIdx ? 'bg-rose-50 border-rose-200 text-rose-800 font-bold' : 'bg-slate-50 border-transparent text-slate-400'}`}><span className="opacity-50 mr-3">{(['A','B','C','D','E'])[aIdx]})</span> {alt}</div>))}</div><div className="mt-4 p-6 bg-slate-50 rounded-3xl text-slate-700 italic font-medium">"{q.explicacao}"</div></div>); })}</div></div>)}</div></div>
+          )}
+        </div>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

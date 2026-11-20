@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cs-site-primaria: #992a23;
+  --cs-site-secundaria: #662215;
+  --cs-site-destaque: #662215;
+  --cs-site-clara: #efefef;
+  --cs-site-texto: #000000;
+  --cs-site-texto-suave: #454545;
+  --cs-site-barra-fundo: #992a23;
+  --cs-site-rodape-fundo: #992a23;
+  --cs-site-topo-fundo: #ffffff;
+}
+
+@layer base {
+  body {
+    font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--cs-site-clara);
+    color: var(--cs-site-texto);
+  }
+}
+
+@media print {
+  body * {
+    visibility: visible;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+}
